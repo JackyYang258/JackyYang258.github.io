@@ -2,14 +2,12 @@
 layout: page
 permalink: /teaching/
 title: teaching
-description: Course materials, schedules, and resources for classes taught.
+description: Teaching assistant experience at UIUC.
 nav: true
 nav_order: 6
-calendar: true
 ---
 
-This page displays a collection of courses with detailed schedules, materials, and resources. You can organize your courses by years, terms, or topics.
+I served as a Teaching Assistant at the University of Illinois Urbana-Champaign (UIUC) for the following courses:
 
-{% include calendar.liquid calendar_id='test@gmail.com' timezone='Asia/Shanghai' %}
-
-{% include courses.liquid %}
+- **Spring 2026:** CS 527
+- **Fall 2025:** CS 598
