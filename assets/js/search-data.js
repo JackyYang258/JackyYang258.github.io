@@ -409,9 +409,9 @@ ninja.data = [{
             },},{id: "news-a-simple-inline-announcement-with-markdown-emoji-sparkles-smile",
           title: 'A simple inline announcement with Markdown emoji! :sparkles: :smile:',
           description: "",
-          section: "News",},{id: "projects-latent-wasserstein-adversarial-imitation-learning-lwail",
-          title: 'Latent Wasserstein Adversarial Imitation Learning (LWAIL)',
-          description: "State-only imitation learning using a dynamics-aware latent space",
+          section: "News",},{id: "projects-latent-wasserstein-adversarial-imitation-learning",
+          title: 'Latent Wasserstein Adversarial Imitation Learning',
+          description: "",
           section: "Projects",handler: () => {
               window.location.href = "/projects/1_project/";
             },},{id: "teachings-data-science-fundamentals",
