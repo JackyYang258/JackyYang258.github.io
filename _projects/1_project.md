@@ -1,69 +1,92 @@
 ---
-layout: page
-title: Latent Wasserstein Adversarial Imitation Learning (LWAIL)
-description: State-only imitation learning using a dynamics-aware latent space
-img: assets/img/lwail_background.jpg
-importance: 1
-category: work
+layout: post
+title:  "Latent Wasserstein Adversarial Imitation Learning" 
+date:   2026-03-05 00:00:00 -0800
+categories: work
 related_publications: true
+author: Siqi Yang, https://YOUR_LINK_HERE; Kai Yan, https://kaiyan289.github.io; Alexander G. Schwing, https://alexander-schwing.de; Yu-Xiong Wang, https://yxw.web.illinois.edu
 ---
 
-[cite_start]Imitation Learning (IL) enables agents to mimic expert behavior by learning from demonstrations[cite: 13]. [cite_start]However, a major challenge in IL is the frequent lack of expert actions, encouraging adoption of Imitation Learning from Observations (LfO), which uses only sequences of expert states[cite: 24]. [cite_start]Because even state-only demonstrations are often expensive to acquire, it is crucial to develop methods that can learn from a minimal amount of expert data[cite: 25]. 
+<script
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+  type="text/javascript">
+</script>
 
-[cite_start]Many Adversarial Imitation Learning (AIL) methods measure distribution difference by f-divergence, but these require "distribution coverage", meaning the distributions must be on the same support set to avoid numerical error[cite: 27, 28]. [cite_start]To address these limitations, the Wasserstein distance has gained popularity[cite: 31]. [cite_start]However, many prior works rely on a simplistic Euclidean distance metric between individual states[cite: 32]. [cite_start]Unfortunately, Euclidean distance fails to capture the environment's dynamics[cite: 62].
+<h4 align="center"> ICLR, 2026</h4>  
+<hr>
+<h4 align="center"> <a href="https://arxiv.org/abs/2603.05440">PDF</a> | <a href="https://github.com/JackyYang258/LWAIL">Code</a> </h4>
 
-[cite_start]To solve this, we introduce **Latent Wasserstein Adversarial Imitation Learning (LWAIL)**, a novel adversarial imitation learning framework that focuses on state-only distribution matching[cite: 15]. 
+<h1 align="center">Abstract</h1>
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/lwail_fig1a.jpg" title="Distance Metric Motivation" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/lwail_fig1b.jpg" title="Pre-training Stage" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/lwail_fig1c.jpg" title="Imitation Stage" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Left: Euclidean distance fails to capture true reachability. Middle: Pre-training an Intention-Conditioned Value Function (ICVF) to learn a dynamics-aware embedding. Right: The imitation stage where the agent learns using the frozen embedding space.
-</div>
+<div class="quote"><p style='font-size:16pt'><i>Traditional distance metrics fail to capture environment dynamics in Wasserstein AIL;<br> we solve this by computing the Wasserstein distance in a dynamics-aware latent space.</i></p></div>
+<details>
+<summary><b>Full Abstract</b></summary>
+Imitation Learning (IL) enables agents to mimic expert behavior by learning from demonstrations. However, traditional IL methods require large amounts of medium-to-high-quality demonstrations as well as actions of expert demonstrations, both of which are often unavailable. To reduce this need, we propose Latent Wasserstein Adversarial Imitation Learning (LWAIL), a novel adversarial imitation learning framework that focuses on state-only distribution matching. It benefits from the Wasserstein distance computed in a dynamics-aware latent space. This dynamics-aware latent space differs from prior work and is obtained via a pre-training stage, where we train the Intention Conditioned Value Function (ICVF) to capture a dynamics-aware structure of the state space using a small set of randomly generated state-only data. We show that this enhances the policy's understanding of state transitions, enabling the learning process to use only one or a few state-only expert episodes to achieve expert-level performance. Through experiments on multiple MuJoCo environments, we demonstrate that our method outperforms prior Wasserstein-based IL methods and prior adversarial IL methods, achieving better results across various tasks.
+</details>
 
-### How It Works
+<h1 align="center">Why the Distance Metric Fails</h1> 
 
-[cite_start]LWAIL learns a distance metric that encodes the environment's dynamics from a minimum amount of state-only low-quality data[cite: 64]. [cite_start]We propose a two-stage process[cite: 66]:
-
-1. [cite_start]**Pre-training:** We leverage a small number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function (ICVF)[cite: 66]. [cite_start]The resulting embedding captures a rich, dynamics-aware notion of reachability between states[cite: 67]. [cite_start]The value function is structured as follows[cite: 107]:
-[cite_start]$$V_{\theta}(s,s_{+},z)=\phi_{\theta}(s)^{T}T_{\theta}(z)\psi_{\theta}(s_{+})$$ [cite: 108]
-2. [cite_start]**Imitation:** During the imitation stage, we freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework[cite: 68]. [cite_start]The problem can be addressed via[cite: 202]:
-[cite_start]$$min_{\pi}max_{||f||_{L}\le1}(\mathbb{E}_{(s,s^{\prime})\sim d_{ss}^{\pi}}[f(\phi(s),\phi(s^{\prime}))]-\mathbb{E}_{(s,s^{\prime})\sim d_{ss}^{E}}[f(\phi(s),\phi(s^{\prime}))])$$ [cite: 205]
-
-<div class="row justify-content-sm-center">
-    <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/lwail_tsne_halfcheetah.jpg" title="HalfCheetah Latent Space" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-6 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/lwail_tsne_walker2d.jpg" title="Walker2d Latent Space" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    [cite_start]t-SNE visualization of the same trajectory in the original state space and the embedding latent space[cite: 176]. [cite_start]The latent space grasps the transition dynamics much better than the vanilla Euclidean distance[cite: 71].
-</div>
+Many prior Wasserstein IL works that employ the Kantorovich-Rubinstein (KR) dual overlook an important issue: the distance metric between individual states is rather simplistic. For this, the Euclidean distance is common. However, it fails to capture the environment's dynamics. For example, a state might be physically close to an expert state in Euclidean space, but unreachable due to an obstacle, making it a poor metric for the learning process.
 
 
-### Results
+<p align="center">
+<img src="/assets/lwail-motivation.png" width="500">
+<br>
+<i>Illustration of a case where the Euclidean distance between states is not a good metric (State B is closer to Expert State C, but cannot reach it).</i>
+</p>
 
-[cite_start]By modifying the agent and discriminator to operate in this learned space, we fix the core issue of prior methods[cite: 69]. [cite_start]We find that this simple approach allows an agent to effectively match the expert's state distribution, enabling highly efficient imitation from minimal expert data[cite: 70]. 
+<!-- <h1 align="center">What is Our Solution?</h1>
 
-[cite_start]We achieve strong results using only a single trajectory of state-based expert data[cite: 72, 75]. [cite_start]Through experiments on multiple MuJoCo environments, we demonstrate that our method outperforms prior Wasserstein-based IL methods and prior adversarial IL methods[cite: 19]. 
+The following table shows a comparison between our proposed LWAIL and existing methods, where <span style="color:lightgray">gray</span> shows suboptimal design:
 
-[cite_start]Furthermore, LWAIL demonstrates remarkable robustness in navigation tasks with perturbed initial states[cite: 311]. [cite_start]The ICVF embeddings in LWAIL successfully capture the environment's dynamics, allowing the agent to handle unseen observations and recover from unfamiliar states[cite: 315].
+---| Geometric property of distributions | Distance metric | Matching Objects | Training Efficiency 
+---|---|---|---|---
+*f*-divergence-based methods | <span style="color:lightgray">No</span> | <span style="color:lightgray">KL or $\chi^2$</span> | Distributions | Bi-level/Single-level
+Prior Wasserstein AIL (KR Dual) | Yes | <span style="color:lightgray">Euclidean</span> | Distributions | <span style="color:lightgray">Metric constrained</span> 
+Our method (LWAIL) | Yes | <b>Dynamics-aware Latent Space</b> | Distributions | <b>Bi-level optimization</b> -->
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/lwail_mujoco_curves.jpg" title="MuJoCo Performance" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Performance on the MuJoCo environments. [cite_start]Overall, our method consistently delivers strong performance across all tasks[cite: 279].
-</div>
+
+<img src="/assets/lwail-teaser.png">
+
+We propose a two-stage process[cite: 66]:
+* **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function (ICVF)[cite: 66].
+* **Capturing Reachability:** The resulting embedding captures a rich, dynamics-aware notion of reachability between states[cite: 67].
+* **Imitation stage:** We freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework[cite: 68].
+
+<h1 align="center">Performance</h1>
+
+We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo environment from the D4RL benchmark, achieving strong results using only a single trajectory of state-based expert data. The results show that the latent space grasps the transition dynamics much better than the vanilla Euclidean distance.
+
+<p align="center">
+
+<img src="/assets/lwail-tsne.png" width="600">
+<br>
+<i>t-SNE visualization of the same trajectory in the original state space and the embedding latent space. The ICVF-trained embedding provides a much more dynamics-aware metric.</i>
+</p>
+
+<details>
+	<summary>Maze2D Environments</summary>  
+	<h4 align="center">Reward Distribution and Performance</h4>
+                <img src="/assets/lwail-maze2d.png">
+    [cite_start]<p>The ICVF-learned metric captures trajectory dynamics, enhancing reward feedback during online inverse RL exploration[cite: 228].</p>
+</details>
+
+<details>
+	<summary>MuJoCo Environments (1 Expert Trajectory)</summary>
+                <h4 align="center">Normalized Rewards (Higher is Better)</h4>
+                <img src="/assets/lwail-mujoco.png">
+    <p>Our method achieves compelling results and convergence compared to the baselines across tasks.</p>
+</details>
+
+
+<h1 align="center">Related Work</h1>
+
+[1] D. Ghosh, C. A. Bhateja, and S. Levine. Reinforcement learning from passive data via latent intentions. In ICML, 2023.
+
+[2] M. Zhang, Y. Wang, X. Ma, L. Xia, J. Yang, Z. Li, and X. Li. Wasserstein distance guided adversarial imitation learning with reward shape exploration. In DDCLS, 2020.
+
+[3] D. Garg, S. Chakraborty, C. Cundy, J. Song, and S. Ermon. Iq-learn: Inverse soft-q learning for imitation. In NeurIPS, 2021.
+
+[4] R. Dadashi, L. Hussenot, M. Geist, and O. Pietquin. Primal wasserstein imitation learning. In ICLR, 2021.
+
+[5] Y. Ma, A. Shen, D. Jayaraman, and O. Bastani. Versatile offline imitation from observations and examples via regularized state-occupancy matching. In ICML, 2022.
