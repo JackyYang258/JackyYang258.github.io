@@ -96,10 +96,7 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 
 
 <h4 align="center">MuJoCo Environments (1 Expert Trajectory)</h4>
-<img
-  src="/assets/lwail_performance.png"
-  style="display: block; margin: 0 auto; width: min(100%, 960px); border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);"
->
+ <img src="/assets/lwail_performance.png" width="100%">
 <p align="center"><i>Normalized Rewards (Higher is Better)</i></p>
 
 
