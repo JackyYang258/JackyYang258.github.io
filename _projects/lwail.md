@@ -5,7 +5,7 @@ date:   2026-03-05 00:00:00 -0800
 category: work
 related_publications: true
 importance: 1
-author: Siqi Yang, https://YOUR_LINK_HERE; Kai Yan, https://kaiyan289.github.io; Alexander G. Schwing, https://alexander-schwing.de; Yu-Xiong Wang, https://yxw.web.illinois.edu
+author: Siqi Yang, https://jackyyang258.github.io; Kai Yan, https://kaiyan289.github.io; Alexander G. Schwing, https://alexander-schwing.de; Yu-Xiong Wang, https://yxw.web.illinois.edu
 ---
 
 <script
@@ -47,7 +47,7 @@ Prior Wasserstein AIL (KR Dual) | Yes | <span style="color:lightgray">Euclidean<
 Our method (LWAIL) | Yes | <b>Dynamics-aware Latent Space</b> | Distributions | <b>Bi-level optimization</b> -->
 
 
-<img src="/assets/lwail-teaser.png">
+<img src="/assets/lwail_teaser.png">
 
 We propose a two-stage process:
 * **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function (ICVF).
@@ -59,19 +59,19 @@ We propose a two-stage process:
 We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo environment from the D4RL benchmark, achieving strong results using only a single trajectory of state-based expert data. The results show that the latent space grasps the transition dynamics much better than the vanilla Euclidean distance.
 
 <p align="center">
-
-<img src="/assets/lwail-tsne.png" width="600">
+<img src="/assets/lwail_tsne_halfcheetah.png" width="48%">
+<img src="/assets/lwail_tsne_walker.png" width="48%">
 <br>
-<i>t-SNE visualization of the same trajectory in the original state space and the embedding latent space. The ICVF-trained embedding provides a much more dynamics-aware metric.</i>
+<i>t-SNE visualizations in the original state space and the embedding latent space on HalfCheetah and Walker2d. The ICVF-trained embedding provides a more dynamics-aware metric.</i>
 </p>
 
 
 
 <details>
-  <summary>MuJoCo Environments (1 Expert Trajectory)</summary>
-  <h4 align="center">Normalized Rewards (Higher is Better)</h4>
-  <embed src="/assets/lwail_performance.pdf" type="application/pdf" width="100%" height="700px" />
-  <p>Our method achieves compelling results and convergence compared to the baselines across tasks.</p>
+	<summary>MuJoCo Environments (1 Expert Trajectory)</summary>
+                <h4 align="center">Normalized Rewards (Higher is Better)</h4>
+                <img src="/assets/lwail_performance_.png">
+    <p>Our method achieves compelling results and convergence compared to the baselines across tasks.</p>
 </details>
 
 
