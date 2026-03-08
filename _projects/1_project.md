@@ -49,10 +49,10 @@ Our method (LWAIL) | Yes | <b>Dynamics-aware Latent Space</b> | Distributions | 
 
 <img src="/assets/lwail-teaser.png">
 
-We propose a two-stage process[cite: 66]:
-* **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function (ICVF)[cite: 66].
-* **Capturing Reachability:** The resulting embedding captures a rich, dynamics-aware notion of reachability between states[cite: 67].
-* **Imitation stage:** We freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework[cite: 68].
+We propose a two-stage process:
+* **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function (ICVF).
+* **Capturing Reachability:** The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
+* **Imitation stage:** We freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework.
 
 <h1 align="center">Performance</h1>
 
@@ -69,7 +69,7 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 	<summary>Maze2D Environments</summary>  
 	<h4 align="center">Reward Distribution and Performance</h4>
                 <img src="/assets/lwail-maze2d.png">
-    [cite_start]<p>The ICVF-learned metric captures trajectory dynamics, enhancing reward feedback during online inverse RL exploration[cite: 228].</p>
+    <p>The ICVF-learned metric captures trajectory dynamics, enhancing reward feedback during online inverse RL exploration.</p>
 </details>
 
 <details>
