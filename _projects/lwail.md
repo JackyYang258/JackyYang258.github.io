@@ -3,7 +3,7 @@ layout: page
 title:  "Latent Wasserstein Adversarial Imitation Learning" 
 date:   2026-03-05 00:00:00 -0800
 category: work
-related_publications: true
+related_publications: false
 importance: 1
 author: Siqi Yang, https://jackyyang258.github.io; Kai Yan, https://kaiyan289.github.io; Alexander G. Schwing, https://alexander-schwing.de; Yu-Xiong Wang, https://yxw.web.illinois.edu
 author_affiliation: University of Illinois Urbana-Champaign (UIUC)
@@ -103,7 +103,7 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 <p align="center"><i>Normalized Rewards (Higher is Better)</i></p>
 
 
-<h1 align="center">Related Work</h1>
+<h4 style="text-align: left; margin-top: 1rem;">References</h4>
 
 [1] Martin Arjovsky, Soumith Chintala, and L´ eon Bottou. Wasserstein generative adversarial networks. In ICML, 2017.
 
