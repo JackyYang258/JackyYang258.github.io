@@ -27,15 +27,13 @@ Imitation Learning (IL) enables agents to mimic expert behavior by learning from
 
 <h1 align="center">Why the Distance Metric Fails</h1> 
 
-Many prior Wasserstein IL works that employ the Kantorovich-Rubinstein (KR) dual overlook an important issue: the distance metric between individual states is rather simplistic. For this, the Euclidean distance is common. However, it fails to capture the environment's dynamics. For example, a state might be physically close to an expert state in Euclidean space, but unreachable due to an obstacle, making it a poor metric for the learning process.
+Many prior Wasserstein IL[1] works that employ the Kantorovich-Rubinstein (KR) dual overlook an important issue: the distance metric between individual states is rather simplistic. For this, the Euclidean distance is common. However, it fails to capture the environment's dynamics. For example, a state might be physically close to an expert state in Euclidean space, but unreachable due to an obstacle, making it a poor metric for the learning process.
 
 
 <p align="center">
-<img src="/assets/lwail_teaser.png" width="500">
+<img src="/assets/lwail_teaser.png" width="300">
 <br>
-<i>Image: lwail_teaser.png</i>
-<br>
-<i>Illustration of a case where the Euclidean distance between states is not a good metric (State B is closer to Expert State C, but cannot reach it).</i>
+<i>Illustration of a case where the Euclidean distance between states is not a good metric (State B is closer to Expert State C in Euclidean distance, but actually State A is closer to Expert State C in real dynamic world).</i>
 </p>
 
 <!-- <h1 align="center">What is Our Solution?</h1>
@@ -50,8 +48,7 @@ Our method (LWAIL) | Yes | <b>Dynamics-aware Latent Space</b> | Distributions | 
 
 
 We propose a two-stage process:
-* **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function (ICVF).
-* **Capturing Reachability:** The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
+* **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function[2]. The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
 * **Imitation stage:** We freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework.
 
 <h1 align="center">Performance</h1>
@@ -72,21 +69,14 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 
 <details>
 	<summary>MuJoCo Environments (1 Expert Trajectory)</summary>
-                <h4 align="center">Normalized Rewards (Higher is Better)</h4>
-                <img src="/assets/lwail_performance.png">
-    <p align="center"><i>performance</i></p>
-    <p>Our method achieves compelling results and convergence compared to the baselines across tasks.</p>
+                <img src="/assets/lwail_performance.png" width="100%">
+    <p align="center"><i>Normalized Rewards (Higher is Better)</i></p>
 </details>
 
 
 <h1 align="center">Related Work</h1>
 
-[1] D. Ghosh, C. A. Bhateja, and S. Levine. Reinforcement learning from passive data via latent intentions. In ICML, 2023.
+[1] Martin Arjovsky, Soumith Chintala, and L´ eon Bottou. Wasserstein generative adversarial networks. In ICML, 2017.
 
-[2] M. Zhang, Y. Wang, X. Ma, L. Xia, J. Yang, Z. Li, and X. Li. Wasserstein distance guided adversarial imitation learning with reward shape exploration. In DDCLS, 2020.
+[2] Dibya Ghosh, Chethan Anand Bhateja, and Sergey Levine. Reinforcement learning from passive data via latent intentions. In ICML, 2023.
 
-[3] D. Garg, S. Chakraborty, C. Cundy, J. Song, and S. Ermon. Iq-learn: Inverse soft-q learning for imitation. In NeurIPS, 2021.
-
-[4] R. Dadashi, L. Hussenot, M. Geist, and O. Pietquin. Primal wasserstein imitation learning. In ICLR, 2021.
-
-[5] Y. Ma, A. Shen, D. Jayaraman, and O. Bastani. Versatile offline imitation from observations and examples via regularized state-occupancy matching. In ICML, 2022.
