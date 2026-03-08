@@ -6,6 +6,7 @@ category: work
 related_publications: true
 importance: 1
 author: Siqi Yang, https://jackyyang258.github.io; Kai Yan, https://kaiyan289.github.io; Alexander G. Schwing, https://alexander-schwing.de; Yu-Xiong Wang, https://yxw.web.illinois.edu
+author_affiliation: University of Illinois Urbana-Champaign (UIUC)
 ---
 
 <script
@@ -31,7 +32,10 @@ Many prior Wasserstein IL[1] works that employ the Kantorovich-Rubinstein (KR) d
 
 
 <p align="center">
-<img src="/assets/lwail_teaser.png" width="300">
+<img
+  src="/assets/lwail_teaser.png"
+  style="display: block; margin: 0 auto; width: min(100%, 340px); border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);"
+>
 <br>
 <i>Illustration of a case where the Euclidean distance between states is not a good metric (State B is closer to Expert State C in Euclidean distance, but actually State A is closer to Expert State C in real dynamic world).</i>
 </p>
@@ -51,8 +55,8 @@ We propose a two-stage process:
 * **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function[2]. The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
 * **Imitation stage:** We freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework.
 
-
 In the adversarial imitation learning stage, we optimize the following objective:
+<div style="background: #f7fafc; border-left: 4px solid #3a6ea5; border-radius: 8px; padding: 0.85rem 1rem; margin: 1rem 0 1.2rem 0;">
 
 $$
 \min_\pi\max_{\|f\|_L\leq 1}
@@ -62,17 +66,26 @@ $$
 \right).
 $$
 
-where $\pi$ is the policy to be learned, $f$ is the critic constrained by $\|f\|_L \le 1$ (1-Lipschitz), $d^\pi_{ss}$ is the state-transition pair distribution $(s,s')$ induced by policy $\pi$, $d^E_{ss}$ is the expert state-transition pair distribution $(s,s')$, and $\phi(\cdot)$ is the frozen ICVF embedding that maps raw states to the dynamics-aware latent space.
-
-Intuitively, the critic maximizes the Wasserstein discrepancy between policy and expert transition-pair distributions in latent space, while the policy minimizes it.
+where $\pi$ is the policy to be learned, $f$ is the critic constrained by \( \lVert f \rVert_L \le 1 \) (1-Lipschitz), $d^\pi_{ss}$ is the state-transition pair distribution $(s,s')$ induced by policy $\pi$, $d^E_{ss}$ is the expert state-transition pair distribution $(s,s')$, and $\phi(\cdot)$ is the frozen ICVF embedding that maps raw states to the dynamics-aware latent space. Intuitively, the critic maximizes the Wasserstein discrepancy between policy and expert transition-pair distributions in latent space, while the policy minimizes it.
+</div>
 
 <h1 align="center">Performance</h1>
 
 We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo environment from the D4RL benchmark, achieving strong results using only a single trajectory of state-based expert data. The results show that the latent space grasps the transition dynamics much better than the vanilla Euclidean distance.
 
 <p align="center">
-<img src="/assets/lwail_tsne_halfcheetah.png" width="48%">
-<img src="/assets/lwail_tsne_walker.png" width="48%">
+<span style="display: inline-block; width: 48%;">
+  <img
+    src="/assets/lwail_tsne_halfcheetah.png"
+    style="display: block; margin: 0 auto; width: 100%; border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);"
+  >
+</span>
+<span style="display: inline-block; width: 48%;">
+  <img
+    src="/assets/lwail_tsne_walker.png"
+    style="display: block; margin: 0 auto; width: 100%; border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);"
+  >
+</span>
 <br>
 <span style="display: inline-block; width: 48%;">tsne_halfcheetah</span>
 <span style="display: inline-block; width: 48%;">tsne_walker</span>
@@ -83,7 +96,10 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 
 
 <h4 align="center">MuJoCo Environments (1 Expert Trajectory)</h4>
-<img src="/assets/lwail_performance.png" width="100%">
+<img
+  src="/assets/lwail_performance.png"
+  style="display: block; margin: 0 auto; width: min(100%, 960px); border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);"
+>
 <p align="center"><i>Normalized Rewards (Higher is Better)</i></p>
 
 

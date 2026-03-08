@@ -20,13 +20,18 @@ layout: default
           {% assign author_name = author_parts[0] | strip %}
           {% assign author_url = author_parts[1] | strip %}
           {% if author_url and author_url != '' %}
-            <a href="{{ author_url }}">{{ author_name }}</a>
+            <a href="{{ author_url }}">{{ author_name }}</a>{% if page.author_affiliation %}<sup>1</sup>{% endif %}
           {% else %}
-            {{ author_name }}
+            {{ author_name }}{% if page.author_affiliation %}<sup>1</sup>{% endif %}
           {% endif %}
           {% unless forloop.last %}, {% endunless %}
         {% endfor %}
       </p>
+      {% if page.author_affiliation %}
+        <p style="text-align: center; font-size: 1rem; margin-top: -0.4rem; margin-bottom: 0.8rem;">
+          <sup>1</sup> {{ page.author_affiliation }}
+        </p>
+      {% endif %}
     {% endif %}
   </header>
 
