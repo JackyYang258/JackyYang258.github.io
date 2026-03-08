@@ -34,7 +34,7 @@ Many prior Wasserstein IL[1] works that employ the Kantorovich-Rubinstein (KR) d
 <p align="center">
 <img
   src="/assets/lwail_teaser.png"
-  style="display: block; margin: 0 auto; width: min(100%, 340px); border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);"
+  style="display: block; margin: 0 auto; width: min(100%, 260px); border-radius: 12px; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);"
 >
 <br>
 <i>Illustration of a case where the Euclidean distance between states is not a good metric (State B is closer to Expert State C in Euclidean distance, but actually State A is closer to Expert State C in real dynamic world).</i>
