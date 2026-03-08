@@ -65,18 +65,13 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 <i>t-SNE visualization of the same trajectory in the original state space and the embedding latent space. The ICVF-trained embedding provides a much more dynamics-aware metric.</i>
 </p>
 
-<details>
-	<summary>Maze2D Environments</summary>  
-	<h4 align="center">Reward Distribution and Performance</h4>
-                <img src="/assets/lwail-maze2d.png">
-    <p>The ICVF-learned metric captures trajectory dynamics, enhancing reward feedback during online inverse RL exploration.</p>
-</details>
+
 
 <details>
-	<summary>MuJoCo Environments (1 Expert Trajectory)</summary>
-                <h4 align="center">Normalized Rewards (Higher is Better)</h4>
-                <img src="/assets/lwail-mujoco.png">
-    <p>Our method achieves compelling results and convergence compared to the baselines across tasks.</p>
+  <summary>MuJoCo Environments (1 Expert Trajectory)</summary>
+  <h4 align="center">Normalized Rewards (Higher is Better)</h4>
+  <embed src="/assets/lwail_performance.pdf" type="application/pdf" width="100%" height="700px" />
+  <p>Our method achieves compelling results and convergence compared to the baselines across tasks.</p>
 </details>
 
 
