@@ -1,9 +1,10 @@
 ---
-layout: post
+layout: page
 title:  "Latent Wasserstein Adversarial Imitation Learning" 
 date:   2026-03-05 00:00:00 -0800
-categories: work
+category: work
 related_publications: true
+importance: 1
 author: Siqi Yang, https://YOUR_LINK_HERE; Kai Yan, https://kaiyan289.github.io; Alexander G. Schwing, https://alexander-schwing.de; Yu-Xiong Wang, https://yxw.web.illinois.edu
 ---
 
