@@ -13,7 +13,7 @@ author: Siqi Yang, https://jackyyang258.github.io; Kai Yan, https://kaiyan289.gi
   type="text/javascript">
 </script>
 
-<h4 align="center"> ICLR, 2026</h4>  
+<h4 align="center"> ICLR 2026</h4>  
 <hr>
 <h4 align="center"> <a href="https://arxiv.org/abs/2603.05440">PDF</a> | <a href="https://github.com/JackyYang258/LWAIL">Code</a> </h4>
 
