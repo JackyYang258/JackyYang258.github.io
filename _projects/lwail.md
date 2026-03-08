@@ -51,6 +51,21 @@ We propose a two-stage process:
 * **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function[2]. The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
 * **Imitation stage:** We freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework.
 
+
+In the adversarial imitation learning stage, we optimize the following objective:
+
+$$
+\min_\pi\max_{\|f\|_L\leq 1}
+\left(
+\mathbb{E}_{(s, s')\sim d^\pi_{ss}}[f(\phi(s),\phi(s'))]
+- \mathbb{E}_{(s,s')\sim d^E_{ss}}[f(\phi(s),\phi(s'))]
+\right).
+$$
+
+where $\pi$ is the policy to be learned, $f$ is the critic constrained by $\|f\|_L \le 1$ (1-Lipschitz), $d^\pi_{ss}$ is the state-transition pair distribution $(s,s')$ induced by policy $\pi$, $d^E_{ss}$ is the expert state-transition pair distribution $(s,s')$, and $\phi(\cdot)$ is the frozen ICVF embedding that maps raw states to the dynamics-aware latent space.
+
+Intuitively, the critic maximizes the Wasserstein discrepancy between policy and expert transition-pair distributions in latent space, while the policy minimizes it.
+
 <h1 align="center">Performance</h1>
 
 We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo environment from the D4RL benchmark, achieving strong results using only a single trajectory of state-based expert data. The results show that the latent space grasps the transition dynamics much better than the vanilla Euclidean distance.
@@ -59,19 +74,17 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 <img src="/assets/lwail_tsne_halfcheetah.png" width="48%">
 <img src="/assets/lwail_tsne_walker.png" width="48%">
 <br>
-<span style="display: inline-block; width: 48%;"><i>tsne_halfcheetah</i></span>
-<span style="display: inline-block; width: 48%;"><i>tsne_walker</i></span>
+<span style="display: inline-block; width: 48%;">tsne_halfcheetah</span>
+<span style="display: inline-block; width: 48%;">tsne_walker</span>
 <br>
 <i>t-SNE visualizations in the original state space and the embedding latent space on HalfCheetah and Walker2d. The ICVF-trained embedding provides a more dynamics-aware metric.</i>
 </p>
 
 
 
-<details>
-	<summary>MuJoCo Environments (1 Expert Trajectory)</summary>
-                <img src="/assets/lwail_performance.png" width="100%">
-    <p align="center"><i>Normalized Rewards (Higher is Better)</i></p>
-</details>
+<h4 align="center">MuJoCo Environments (1 Expert Trajectory)</h4>
+<img src="/assets/lwail_performance.png" width="100%">
+<p align="center"><i>Normalized Rewards (Higher is Better)</i></p>
 
 
 <h1 align="center">Related Work</h1>
@@ -79,4 +92,3 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 [1] Martin Arjovsky, Soumith Chintala, and L´ eon Bottou. Wasserstein generative adversarial networks. In ICML, 2017.
 
 [2] Dibya Ghosh, Chethan Anand Bhateja, and Sergey Levine. Reinforcement learning from passive data via latent intentions. In ICML, 2023.
-
