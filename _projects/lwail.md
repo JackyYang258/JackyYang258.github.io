@@ -35,7 +35,7 @@ Imitation Learning (IL) enables agents to mimic expert behavior by learning from
 
 <h1 align="center">Why the Distance Metric Fails</h1> 
 
-Many prior Wasserstein IL[1] works that employ the Kantorovich-Rubinstein (KR) dual overlook an important issue: the distance metric between individual states is rather simplistic. For this, the Euclidean distance is common. However, it fails to capture the environment's dynamics. For example, a state might be physically close to an expert state in Euclidean space, but unreachable due to an obstacle, making it a poor metric for the learning process.
+Many prior Wasserstein IL [1] works that employ the Kantorovich-Rubinstein (KR) dual overlook an important issue: the distance metric between individual states is rather simplistic. For this, the Euclidean distance is common. However, it fails to capture the environment's dynamics. For example, a state might be physically close to an expert state in Euclidean space, but unreachable due to an obstacle, making it a poor metric for the learning process.
 
 
 <p align="center">
@@ -59,7 +59,7 @@ Our method (LWAIL) | Yes | <b>Dynamics-aware Latent Space</b> | Distributions | 
 
 
 We propose a two-stage process:
-* **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function[2]. The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
+* **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function [2]. The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
 * **Imitation stage:** We freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework.
 
 In the adversarial imitation learning stage, we optimize the following objective:
@@ -78,7 +78,7 @@ where $\pi$ is the policy to be learned, $f$ is the critic constrained by \( \lV
 
 <h1 align="center">Performance</h1>
 
-We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo environment from the D4RL benchmark, achieving strong results using only a single trajectory of state-based expert data. The results show that the latent space grasps the transition dynamics much better than the vanilla Euclidean distance.
+We validate our approach on pointmaze, antmaze, and challenging locomotion tasks in the MuJoCo environment from the D4RL benchmark, achieving strong results using only a single trajectory of state-based expert data. The results show that the latent space grasps the transition dynamics much better than the vanilla Euclidean distance.
 
 <p align="center">
 <span style="display: inline-block; width: 48%;">
@@ -97,7 +97,8 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 <span style="display: inline-block; width: 48%;">tsne_halfcheetah</span>
 <span style="display: inline-block; width: 48%;">tsne_walker</span>
 <br>
-<i>t-SNE visualizations in the original state space and the embedding latent space on HalfCheetah and Walker2d. The ICVF-trained embedding provides a more dynamics-aware metric.</i>
+<i>t-SNE visualizations in the original state space and the embedding latent space on HalfCheetah and Walker2d. The color of the points represents the ground-truth reward of the state (greener is
+higher). States connected by lines are adjacent in the trajectory. The ICVF-trained embedding provides a more dynamics-aware metric.</i>
 </p>
 
 
@@ -109,6 +110,6 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 
 <h4 style="text-align: left; margin-top: 1rem;">References</h4>
 
-[1] Martin Arjovsky, Soumith Chintala, and L´ eon Bottou. Wasserstein generative adversarial networks. In ICML, 2017.
+[1] Martin Arjovsky, Soumith Chintala, and Léon Bottou. Wasserstein generative adversarial networks. In ICML, 2017.
 
 [2] Dibya Ghosh, Chethan Anand Bhateja, and Sergey Levine. Reinforcement learning from passive data via latent intentions. In ICML, 2023.
