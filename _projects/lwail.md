@@ -31,7 +31,9 @@ Many prior Wasserstein IL works that employ the Kantorovich-Rubinstein (KR) dual
 
 
 <p align="center">
-<img src="/assets/lwail-motivation.png" width="500">
+<img src="/assets/lwail_teaser.png" width="500">
+<br>
+<i>Image: lwail_teaser.png</i>
 <br>
 <i>Illustration of a case where the Euclidean distance between states is not a good metric (State B is closer to Expert State C, but cannot reach it).</i>
 </p>
@@ -47,8 +49,6 @@ Prior Wasserstein AIL (KR Dual) | Yes | <span style="color:lightgray">Euclidean<
 Our method (LWAIL) | Yes | <b>Dynamics-aware Latent Space</b> | Distributions | <b>Bi-level optimization</b> -->
 
 
-<img src="/assets/lwail_teaser.png">
-
 We propose a two-stage process:
 * **Pre-training stage:** We leverage a small (1% of online rollouts) number of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function (ICVF).
 * **Capturing Reachability:** The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
@@ -62,6 +62,9 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 <img src="/assets/lwail_tsne_halfcheetah.png" width="48%">
 <img src="/assets/lwail_tsne_walker.png" width="48%">
 <br>
+<span style="display: inline-block; width: 48%;"><i>tsne_halfcheetah</i></span>
+<span style="display: inline-block; width: 48%;"><i>tsne_walker</i></span>
+<br>
 <i>t-SNE visualizations in the original state space and the embedding latent space on HalfCheetah and Walker2d. The ICVF-trained embedding provides a more dynamics-aware metric.</i>
 </p>
 
@@ -70,7 +73,8 @@ We validate our approach on Umaze and challenging locomotion tasks in the MuJoCo
 <details>
 	<summary>MuJoCo Environments (1 Expert Trajectory)</summary>
                 <h4 align="center">Normalized Rewards (Higher is Better)</h4>
-                <img src="/assets/lwail_performance_.png">
+                <img src="/assets/lwail_performance.png">
+    <p align="center"><i>performance</i></p>
     <p>Our method achieves compelling results and convergence compared to the baselines across tasks.</p>
 </details>
 
