@@ -1,6 +1,10 @@
 metadata:
-  last_updated: '2026-03-09'
+  last_updated: '2026-04-08'
 papers:
+  KqsqEWEAAAAJ:2osOgNQ5qMEC:
+    citations: 0
+    title: Latent Wasserstein Adversarial Imitation Learning
+    year: '2026'
   KqsqEWEAAAAJ:9yKSN-GCB0IC:
     citations: 30
     title: 'Riemann: Near real-time se (3)-equivariant robot manipulation without point cloud segmentation'
