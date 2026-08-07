@@ -1,10 +1,12 @@
 ---
 layout: page
 title:  "Latent Wasserstein Adversarial Imitation Learning" 
+description: State-only imitation learning that computes the Wasserstein distance in a dynamics-aware latent space, reaching expert performance from a single expert trajectory (ICLR 2026).
+img: assets/img/lwail_teaser.png
 date:   2026-03-05 00:00:00 -0800
 category: work
 related_publications: false
-importance: 1
+importance: 2
 author: Siqi Yang, https://jackyyang258.github.io; Kai Yan, https://kaiyan289.github.io; Alexander G. Schwing, https://alexander-schwing.de; Yu-Xiong Wang, https://yxw.web.illinois.edu
 author_affiliation: University of Illinois Urbana-Champaign (UIUC)
 ---
