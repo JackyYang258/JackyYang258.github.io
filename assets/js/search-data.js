@@ -18,7 +18,7 @@ ninja.data = [{
           },
         },{id: "nav-projects",
           title: "projects",
-          description: "A growing collection of your cool projects.",
+          description: "Project pages for my research on coding agents, self-evolving harnesses, and imitation learning.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/projects/";
@@ -411,9 +411,14 @@ ninja.data = [{
           description: "",
           section: "News",},{id: "projects-latent-wasserstein-adversarial-imitation-learning",
           title: 'Latent Wasserstein Adversarial Imitation Learning',
-          description: "",
+          description: "State-only imitation learning that computes the Wasserstein distance in a dynamics-aware latent space, reaching expert performance from a single expert trajectory (ICLR 2026).",
           section: "Projects",handler: () => {
               window.location.href = "/projects/lwail/";
+            },},{id: "projects-what-does-a-self-evolved-harness-encode",
+          title: 'What Does a Self-Evolved Harness Encode?',
+          description: "Disentangling language and model compensation in self-evolving coding agents, across 8 languages × 3 models on Multi-SWE-Bench.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/triage/";
             },},{id: "teachings-data-science-fundamentals",
           title: 'Data Science Fundamentals',
           description: "This course covers the foundational aspects of data science, including data collection, cleaning, analysis, and visualization. Students will learn practical skills for working with real-world datasets.",
@@ -430,6 +435,20 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("mailto:%73%69%71%69%79%61%6E%67@%69%6C%6C%69%6E%6F%69%73.%65%64%75", "_blank");
+        },
+      },{
+        id: 'social-github',
+        title: 'GitHub',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://github.com/JackyYang258", "_blank");
+        },
+      },{
+        id: 'social-linkedin',
+        title: 'LinkedIn',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.linkedin.com/in/siqi-yang-37a9b32bb", "_blank");
         },
       },{
         id: 'social-scholar',

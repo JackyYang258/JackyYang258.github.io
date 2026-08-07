@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://JackyYang258.github.io/sitemap.xml
+Sitemap: https://jackyyang258.github.io/sitemap.xml
