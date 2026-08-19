@@ -1,5 +1,5 @@
 metadata:
-  last_updated: '2026-08-12'
+  last_updated: '2026-08-19'
 papers:
   KqsqEWEAAAAJ:2osOgNQ5qMEC:
     citations: 0
@@ -9,3 +9,7 @@ papers:
     citations: 35
     title: 'Riemann: Near real-time se (3)-equivariant robot manipulation without point cloud segmentation'
     year: '2024'
+  KqsqEWEAAAAJ:qjMakFHDy7sC:
+    citations: 0
+    title: 'One Recipe, Many Harnesses: What Self-Evolution Encodes Across Languages and Models'
+    year: '2026'
