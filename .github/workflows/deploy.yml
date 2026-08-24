@@ -15,11 +15,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Build CV PDF
+        id: cv
+        continue-on-error: true
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: cv.tex
+
       - name: Stage static site
         run: |
           mkdir -p dist
           cp index.html lwail.html robots.txt sitemap.xml dist/
           cp -r assets website projects dist/
+          if [ -f cv.pdf ]; then
+            cp cv.pdf dist/cv.pdf
+            echo "CV PDF included"
+          else
+            echo "::warning::cv.pdf was not built; site deploys without it"
+          fi
+
       - name: Deploy to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
