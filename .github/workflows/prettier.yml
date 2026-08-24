@@ -23,14 +23,7 @@ jobs:
         run: npm install --save-dev --save-exact prettier @shopify/prettier-plugin-liquid
       - name: Prettier Check 🔎
         id: prettier
-        run: npx prettier . --write
-      - name: Commit Prettier changes 📝
-        run: |
-          git config user.name "prettier-bot"
-          git config user.email "actions@github.com"
-          git add -A
-          git commit -m "style: auto-format with prettier" --allow-empty || true
-          git push
+        run: npx prettier . --check
       - name: Create diff 📝
         # https://docs.github.com/en/actions/learn-github-actions/expressions#failure
         if: ${{ failure() }}
