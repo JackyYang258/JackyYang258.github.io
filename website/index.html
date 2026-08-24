@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Does a Self-Evolved Harness Encode?</title>
+<meta name="description" content="Disentangling programming language and model compensation in self-evolving coding-agent harnesses. A study across 8 programming languages and 3 base models on Multi-SWE-Bench.">
+<meta property="og:title" content="What Does a Self-Evolved Harness Encode?">
+<meta property="og:description" content="Holding one evolution recipe fixed across an 8-language × 3-model grid reveals that evolved harnesses are legible compensation layers, not opaque benchmark-tuned scaffolds.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://JackyYang258.github.io/website/static/images/paper_main_3way.png">
+<meta property="og:url" content="https://JackyYang258.github.io/website/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What Does a Self-Evolved Harness Encode?">
+<meta name="twitter:description" content="Disentangling Language and Model Compensation in Coding Agents">
+<meta name="twitter:image" content="https://JackyYang258.github.io/website/static/images/paper_main_3way.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%233577bd'/%3E%3Ctext x='50' y='72' font-size='62' font-family='Georgia,serif' font-weight='bold' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #3577bd;
+    --accent-dark: #275d96;
+    --ink: #1c2733;
+    --ink-soft: #46586b;
+    --ink-faint: #7b8a99;
+    --paper: #ffffff;
+    --paper-warm: #f6f8fa;
+    --rule: #e3e9ef;
+    --highlight: #fff7e6;
+    --max-width: 860px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+  }
+  .sans { font-family: 'Inter', -apple-system, sans-serif; }
+  code, pre { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 72px 24px 40px;
+    text-align: center;
+    background:
+      radial-gradient(1000px 400px at 50% -120px, #e8f0f9 0%, rgba(232,240,249,0) 70%),
+      var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-inner { max-width: 940px; margin: 0 auto; }
+  .venue-tag {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    background: #e8f0f9;
+    border: 1px solid #cddff0;
+    padding: 5px 14px; border-radius: 999px;
+    margin-bottom: 22px;
+  }
+  h1.title {
+    font-size: clamp(30px, 4.6vw, 44px);
+    line-height: 1.18;
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+  .subtitle {
+    font-size: clamp(19px, 2.6vw, 24px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin: 0 0 28px;
+  }
+  .authors { font-size: 18px; margin: 0 0 6px; }
+  .authors a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
+  .authors a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .authors sup { color: var(--accent-dark); font-size: 12px; }
+  .affils { font-family: 'Inter', sans-serif; font-size: 14.5px; color: var(--ink-faint); margin: 0 0 30px; }
+  .affils sup { color: var(--accent-dark); }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 8px; }
+  .btn {
+    font-family: 'Inter', sans-serif;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 600;
+    color: #fff; background: var(--ink);
+    padding: 10px 20px; border-radius: 999px;
+    text-decoration: none;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn svg { width: 16px; height: 16px; fill: currentColor; }
+  .btn.placeholder { opacity: .55; cursor: default; }
+  .placeholder-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px; color: var(--ink-faint); margin-top: 10px;
+  }
+
+  /* ---------- Layout ---------- */
+  .wrap { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: 1020px; margin-left: auto; margin-right: auto; }
+  section { padding: 34px 0 6px; }
+  h2 {
+    font-size: 29px; line-height: 1.25; font-weight: 700;
+    margin: 34px 0 14px;
+    scroll-margin-top: 24px;
+  }
+  h2 .kicker {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 6px;
+  }
+  h3 { font-size: 22px; font-weight: 700; margin: 26px 0 8px; }
+  p { margin: 0 0 18px; }
+  a { color: var(--accent-dark); }
+  strong { font-weight: 700; }
+  .lead { font-size: 21px; color: var(--ink-soft); }
+
+  /* ---------- Figures ---------- */
+  figure { margin: 28px 0 30px; }
+  figure img {
+    width: 85%; height: auto; display: block;
+    border: 1px solid var(--rule); border-radius: 10px;
+    background: #fff; padding: 10px;
+    margin: 0 auto;
+  }
+  figure.wide {
+    width: min(1020px, 92vw);
+    margin-left: calc(50% - min(510px, 46vw));
+    margin-right: calc(50% - min(510px, 46vw));
+    margin-top: 28px;
+    margin-bottom: 30px;
+  }
+  figure.wide img {
+    width: 100%;
+    margin: 0;
+  }
+  figcaption {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; line-height: 1.55;
+    color: var(--ink-faint);
+    margin-top: 10px; padding: 0 6px;
+  }
+  figcaption b { color: var(--ink-soft); }
+
+  /* ---------- Callouts, cards ---------- */
+  .tldr {
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin: 30px 0;
+    font-size: 18px;
+  }
+  .tldr .label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 13px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent-dark);
+    display: block; margin-bottom: 8px;
+  }
+  .findings-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin: 26px 0 10px;
+  }
+  @media (max-width: 720px) { .findings-grid { grid-template-columns: 1fr; } }
+  .finding-card {
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .finding-card .num {
+    font-family: 'Inter', sans-serif;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    font-size: 14px; font-weight: 700; margin-bottom: 10px;
+  }
+  .finding-card h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px; font-weight: 700; margin: 0 0 6px;
+  }
+  .finding-card p { font-size: 15.5px; line-height: 1.55; color: var(--ink-soft); margin: 0; }
+  .callout {
+    background: var(--highlight);
+    border: 1px solid #f0e2bd;
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 24px 0;
+    font-size: 17.5px;
+  }
+  .callout .label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 12.5px; letter-spacing: .09em;
+    text-transform: uppercase; color: #9a6b00;
+    display: block; margin-bottom: 6px;
+  }
+
+  /* ---------- Table ---------- */
+  table.guide {
+    width: 100%; border-collapse: collapse;
+    font-family: 'Inter', sans-serif; font-size: 15px;
+    margin: 24px 0 30px;
+  }
+  table.guide th, table.guide td {
+    text-align: left; padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  table.guide th {
+    font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-faint); border-bottom: 2px solid var(--ink);
+  }
+  table.guide td:first-child { font-weight: 600; white-space: nowrap; }
+
+  /* ---------- BibTeX ---------- */
+  pre.bibtex {
+    background: #0f1720; color: #dce6f0;
+    border-radius: 10px;
+    padding: 20px 22px;
+    font-size: 13.5px; line-height: 1.6;
+    overflow-x: auto;
+    margin: 20px 0 40px;
+  }
+
+  /* ---------- Divider & footer ---------- */
+  hr.sep { border: none; border-top: 1px solid var(--rule); margin: 44px 0 8px; }
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 40px; padding: 30px 24px 44px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; color: var(--ink-faint);
+    text-align: center;
+  }
+  footer a { color: var(--ink-soft); }
+
+  /* ---------- TOC ---------- */
+  nav.toc {
+    font-family: 'Inter', sans-serif;
+    font-size: 14.5px;
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 16px 22px;
+    margin: 34px 0 6px;
+  }
+  nav.toc .label { font-weight: 700; font-size: 12.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-bottom: 8px; }
+  nav.toc a { text-decoration: none; color: var(--accent-dark); }
+  nav.toc a:hover { text-decoration: underline; }
+  nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 28px; }
+  @media (max-width: 640px) { nav.toc ol { columns: 1; } }
+  nav.toc li { margin-bottom: 5px; break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-inner">
+    <h1 class="title">What Does a Self&#8209;Evolved Harness Encode?</h1>
+    <p class="subtitle">Disentangling Language and Model Compensation in Coding Agents</p>
+    <p class="authors">
+      <a href="https://jackyyang258.github.io/">Siqi&nbsp;Yang</a><sup>1,2</sup> &nbsp;·&nbsp;
+      <a href="https://scholar.google.com/citations?user=iV5nuc4AAAAJ&hl=zh-CN">Qianlan&nbsp;Yang</a><sup>1</sup> &nbsp;·&nbsp;
+      <a href="https://yxw.cs.illinois.edu/">Yu&#8209;Xiong&nbsp;Wang</a><sup>1</sup> &nbsp;·&nbsp;
+      <a href="https://scholar.google.com/citations?user=-NuBDksAAAAJ&hl=en">Saurabh&nbsp;Pujar</a><sup>2</sup> &nbsp;·&nbsp;
+      <a href="https://hirzels.com/martin/">Martin&nbsp;Hirzel</a><sup>2</sup>
+    </p>
+    <p class="affils"><sup>1</sup>University of Illinois Urbana&#8209;Champaign &nbsp;&nbsp; <sup>2</sup>IBM</p>
+    <div class="btn-row sans">
+      <!-- TODO: replace # placeholders with real links -->
+      <!-- <a class="btn" href="#" title="TODO: link to paper PDF">
+        <svg viewBox="0 0 24 24"><path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6zm7 1.5L18.5 9H13V3.5zM8 13h8v1.5H8V13zm0 3h8v1.5H8V16zm0-6h3v1.5H8V10z"/></svg>
+        Paper
+      </a> -->
+      <a class="btn" href="https://arxiv.org/abs/2608.10178">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v2H6v12h5v2H4V4zm9 0h7v16h-7v-2h5V6h-5V4z"/></svg>
+        arXiv
+      </a>
+      <a class="btn placeholder" href="https://github.com/IIDA-Institute/triage" title="Code release coming soon">
+        <svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.7 5.6.7 11.9c0 5 3.2 9.3 7.7 10.8.6.1.8-.2.8-.5v-2c-3.1.7-3.8-1.3-3.8-1.3-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.3.9.1-.7.4-1.2.7-1.5-2.5-.3-5.2-1.3-5.2-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3 0 0 1-.3 3.1 1.2a10.7 10.7 0 0 1 5.7 0C16.9 5 17.9 5.3 17.9 5.3c.6 1.6.2 2.8.1 3 .7.9 1.2 1.9 1.2 3.2 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.5a11.3 11.3 0 0 0 7.6-10.7C23.3 5.6 18.3.5 12 .5z"/></svg>
+        Code
+      </a>
+      <!-- <a class="btn" href="#bibtex">
+        <svg viewBox="0 0 24 24"><path d="M9.6 4l-5 16h2.2l1.2-4h5l1.2 4h2.2l-5-16H9.6zm-1 10l1.9-6.3L12.4 14H8.6zM19 8h2v12h-2V8z"/></svg>
+        BibTeX
+      </a> -->
+    </div>
+    <p class="placeholder-note">Code coming soon.</p>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <!-- ================= TL;DR ================= -->
+  <div class="tldr">
+    <span class="label">TL;DR</span>
+    Self-evolving harnesses reliably improve coding agents — but what do the evolved artifacts actually <em>contain</em>?
+    We hold one instrumented evolution recipe (<strong>TRIAGE</strong>) fixed across <strong>8 programming languages × 3 base models</strong> on Multi-SWE-Bench and read the answer off the artifacts:
+    an evolved harness is a <strong>legible compensation layer</strong> that closes the gap between what a model <em>can</em> do and what it <em>does</em> — shaped jointly by the language's engineering demands and the model's behavioral gaps, with a portable disciplinary core and a 20–40% ecosystem-specific remainder that only native re-evolution recovers.
+  </div>
+
+  <figure class="wide">
+    <img src="static/images/paper_main_3way.png" alt="Main results: held-out solve rates of minimal seed, mini-SWE-agent, and TRIAGE across 8 languages and 3 models">
+    <figcaption><b>Held-out results across the full 8×3 grid.</b> The evolved harness (blue) improves over the minimal seed in most cells and matches or exceeds the manually designed mini-SWE-agent. <strong>Two null regions</strong> fall exactly along the grid's two axes — Python under every model, and GPT-5-mini in every language — and the paper's mechanism accounts for both.</figcaption>
+  </figure>
+
+  <nav class="toc">
+    <span class="label">On this page</span>
+    <ol>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#why">Why ask what a harness encodes?</a></li>
+      <li><a href="#method">TRIAGE: evolution you can read</a></li>
+      <li><a href="#finding1">Finding 1 — The recipe works, and its failures are explicable</a></li>
+      <li><a href="#finding2">Finding 2 — Gains are compensation for execution defects</a></li>
+      <li><a href="#finding3">Finding 3 — A shared playbook, disjoint instantiations</a></li>
+      <li><a href="#finding4">Finding 4 — Reuse is bounded by the ecosystem margin</a></li>
+      <li><a href="#guidance">Practical guidance</a></li>
+      <li><a href="#limitations">Limitations</a></li>
+      <li><a href="#bibtex">BibTeX</a></li>
+    </ol>
+  </nav>
+
+  <!-- ================= ABSTRACT ================= -->
+  <section id="abstract">
+    <h2><span class="kicker">Abstract</span>What the paper shows</h2>
+    <p>
+      Self-evolving harnesses work by letting an agent watch its own failures and automatically improve its prompts and tools. They make coding agents better, but nobody has really analyzed what they actually learned—do they just memorize the test cases, learn about the programming language, or fix the model's weaknesses?
+    </p>
+    <p>
+      We find out by running the same evolution algorithm on eight programming languages and three different AI models, then carefully reading what each evolved harness actually says. Here's what we learned: <strong>(1)</strong> The method works in most cases, and when it doesn't, we can explain why. <strong>(2)</strong> Improvements come from fixing the model's bad habits—things it's capable of doing but doesn't do automatically, like running tests before submitting. <strong>(3)</strong> Different languages evolved different solutions, but they follow the same core principles. <strong>(4)</strong> The core ideas transfer to new languages, but each language needs some customization. In the end, an evolved harness is really just a smart workaround layer that compensates for both what the language demands and what the model can't do—not just overfitting to the test cases.
+    </p>
+
+    <div class="findings-grid sans">
+      <div class="finding-card"><span class="num">1</span>
+        <h4>It works in most cases—and we can explain why it doesn't</h4>
+        <p>The method improves performance in most language-model combinations. When it doesn't (Python and one weak model), our theory predicts exactly why.</p>
+      </div>
+      <div class="finding-card"><span class="num">2</span>
+        <h4>Improvements fix bad habits, not bad understanding</h4>
+        <p>The model knows how to run tests and avoid breaking code—it just doesn't do it automatically. The harness teaches it to follow through.</p>
+      </div>
+      <div class="finding-card"><span class="num">3</span>
+        <h4>Same idea, different details across languages</h4>
+        <p>The core strategy transfers between languages, but each harness needs language-specific tweaks (about 20–40% of each one).</p>
+      </div>
+      <div class="finding-card"><span class="num">4</span>
+        <h4>You can reuse most of it, but not all</h4>
+        <p>The core ideas work in new languages, but complex languages like Java and C++ need some custom evolution to get the full benefit.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= WHY ================= -->
+  <section id="why">
+    <h2><span class="kicker">Background</span>Why ask what a harness encodes?</h2>
+    <p class="lead">
+      Coding agents improve for two reasons: the base model gets smarter, or the <em>harness</em> around it gets better. The harness — prompts, tools, memory, workflow scaffolding — is the editable half, and a growing line of work now lets agents evolve it themselves.
+    </p>
+    <p>
+      Self-evolving harnesses work well and beat hand-written prompts. But past papers only test on one language, one model, one task at a time. This leaves a big gap: <strong>what exactly did the harness learn?</strong> Is it learning the language (how to build and test code)? Is it fixing the model's quirks? Or is it just overfitting to one test set? The answer matters because it determines whether the harness will work in a new language.
+    </p>
+    <p>
+      To find out, we run the same evolution algorithm across eight programming languages and three AI models—a 24-cell grid with one harness per cell. This is a clean experiment: same algorithm, different languages and models. Whatever changes in the harness must come from that combination, not from random choice or luck.
+    </p>
+    <p>
+      Language is a good dimension to vary because it's concrete—different languages have real differences in how you build, test, and run code. By keeping everything else the same (same task, same algorithm), we can see exactly what each language and model combination needs.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= METHOD ================= -->
+  <section id="method">
+    <h2><span class="kicker">Method</span>TRIAGE: evolution you can read afterwards</h2>
+    <p>
+      We use a method called <strong>TRIAGE</strong> to make the evolution process traceable: every change the harness makes is linked to a specific failure it's trying to fix. This lets us see exactly what each evolved harness learned, not just that it got better.
+    </p>
+
+    <figure>
+      <img src="static/images/overview.png" alt="Overview of the TRIAGE harness self-evolution loop">
+      <figcaption><b>The TRIAGE loop.</b> The AI agent runs inside an evolving harness (prompt, tools, and saved lessons). When it fails, we analyze the failure and propose a fix. Each fix is tested to make sure it actually helps before being kept.</figcaption>
+    </figure>
+
+    <p>The method has three key properties:</p>
+    <p>
+      <strong>Everyone starts from scratch.</strong> Each harness begins as almost empty—just a basic prompt and one tool. Everything it learns must improve performance on test cases, so nothing survives just by accident.
+    </p>
+    <p>
+      <strong>We look deeper than just pass/fail.</strong> When the AI fails a test, we don't just know it failed—we see exactly what went wrong. Did it edit the wrong file? Submit broken code? These details tell us what to fix.
+    </p>
+    <p>
+      <strong>Changes must prove themselves.</strong> When we add a rule to the harness, we test whether it actually helps. If it doesn't, we remove it. This prevents junk from accumulating.
+    </p>
+    <p>
+      For each language, we use 20 test cases to evolve the harness, then test it on 50 new cases it hasn't seen. We run this 3 times and take the average.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= FINDING 1 ================= -->
+  <section id="finding1">
+    <h2><span class="kicker">Finding 1</span>The recipe works — and where it doesn't is explicable</h2>
+    <p>
+      The method works in most cases. Over all 24 language-model combinations, it improved performance in most of them. Even when compared to hand-written baselines, it was competitive or better.
+    </p>
+    <p>
+      Where it <em>doesn't</em> work is interesting and predictable. Python doesn't improve under any model—the AI already knows how to write good Python. One weak model doesn't improve in any language—it just isn't capable enough. These aren't failures; they're exactly what our theory predicts. We'll explain why in Finding 2.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= FINDING 2 ================= -->
+  <section id="finding2">
+    <h2><span class="kicker">Finding 2</span>Gains are compensation for recoverable execution defects</h2>
+    <p class=”lead”>
+      The harness doesn't teach the model better reasoning—it teaches better <em>process</em>. The AI knows how to fix bugs, but forgets to follow the steps.
+    </p>
+    <p>
+      We found two common bad habits:
+    </p>
+    <p>
+      <strong>Editing test files</strong> — a correct fix breaks because the test file got changed too. The harness fixes this with the rule: <em>”never touch test files”</em>. <strong>Submitting broken code</strong> — the AI forgets to check if the code even compiles. The harness adds: <em>”verify it compiles before you submit”</em>.
+    </p>
+
+    <figure>
+      <img src=”static/images/selfsab_composition.png” alt=”Composition of automatically detected execution defects by language”>
+      <figcaption><b>Different languages need different fixes.</b> Compiled languages like C++ break when code doesn't compile (70% of failures). Interpreted languages like JavaScript more often have the test-file problem. So each language's harness learns different priorities.</figcaption>
+    </figure>
+
+    <p>
+      This is why generic solutions don't work: a one-size-fits-all rule would guess wrong for some languages. But it also tells us something useful: if the AI already avoids these mistakes (like Python tends to), the harness has nothing to teach it.
+    </p>
+    <p>
+      One weak AI model couldn't improve no matter the language—it's not that it needs a better harness, it just can't do the task well enough. This matches our theory: the harness only helps when the model <em>can</em> do better but doesn't automatically.
+    </p>
+
+    <div class=”callout”>
+      <span class=”label”>Key point</span>
+      The harness fixes bad habits, not bad understanding. The AI knows what good code looks like; it just needs to be reminded to follow the steps.
+    </div>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= FINDING 3 ================= -->
+  <section id="finding3">
+    <h2><span class="kicker">Finding 3</span>A shared playbook, almost disjoint instantiations</h2>
+    <p>
+      Each language gets its own harness. But are they completely different, or do they follow the same playbook with different details? We looked at what each harness actually says and found they share the same <em>ideas</em> (like “check tests before submitting”) but use completely different <em>concrete steps</em> (Java's test runner works nothing like JavaScript's).
+    </p>
+
+    <figure>
+      <img src=”static/images/c2_jaccard_haiku.png” alt=”Cross-language harness overlap at the concept level versus the ecosystem-marker level (Claude Haiku 4.5)”>
+      <figcaption><b>Same idea, different details.</b> Different languages' harnesses agree on the same core principles, but use different tools and commands to implement them.</figcaption>
+    </figure>
+
+    <p>
+      The core strategy transfers between languages. But each harness also contains language-specific stuff (20–40% of it) that only works in its target language—file paths, build commands, test conventions.
+    </p>
+
+    <figure>
+      <img src=”static/images/c2_ecofrac.png” alt=”Ecosystem-specific fraction of each evolved harness per language, for Haiku and DeepSeek”>
+      <figcaption><b>How much is language-specific?</b> About a quarter to a third of each evolved harness is language-specific gear that won't work elsewhere.</figcaption>
+    </figure>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= FINDING 4 ================= -->
+  <section id="finding4">
+    <h2><span class="kicker">Finding 4</span>Reuse is real — and bounded by the ecosystem margin</h2>
+    <p class=”lead”>
+      Can you reuse a harness from one language in another? Let's test two ideas: (1) strip out the language-specific parts and keep only the core ideas, (2) just copy a complete harness as-is. Both work to some degree, but have limits.
+    </p>
+
+    <h3>Strategy 1: The universal harness (core ideas only)</h3>
+    <p>
+      We distilled the core ideas from all languages into one generic harness with no language-specific commands. Does it work in new languages?
+    </p>
+
+    <figure>
+      <img src=”static/images/e7_universal_retention.png” alt=”Retention of native gain by a single language-agnostic universal harness across seven languages”>
+      <figcaption><b>It depends on the language.</b> Simple languages (Go, JavaScript) don't need language-specific tricks—the universal harness works just as well. Complex languages (Java, C++, TypeScript) need customization to get the full benefit.</figcaption>
+    </figure>
+
+    <h3>Strategy 2: Borrow a complete harness (as-is)</h3>
+    <p>
+      What if you just take a harness evolved for one language and use it in another without modification?
+    </p>
+
+    <figure>
+      <img src=”static/images/xfer_5x5.png” alt=”Cross-language transfer retention matrix over five languages”>
+      <figcaption><b>It works surprisingly well.</b> Harnesses mostly transfer positively between languages, giving you a head start. But you won't get the full performance without some customization.</figcaption>
+    </figure>
+
+    <p>
+      <strong>The core travel; the details don't.</strong> When you borrow a harness from another language, you get the good ideas but miss out on language-specific optimizations. That's often good enough to bootstrap a new language, but you'll need evolution to get the best results.
+    </p>
+    <p>
+      <strong>Some harnesses export better than others.</strong> A harness built for one language's problems doesn't always help another. JavaScript teaches “run tests first,” which helps typed languages (because building is part of running tests). But JavaScript itself doesn't benefit from C++'s “check types” rule because JavaScript doesn't have a separate type-checking step.
+    </p>
+
+    <div class=”callout”>
+      <span class=”label”>The catch</span>
+      Borrowing a harness from JavaScript for TypeScript actually backfires. JavaScript doesn't enforce type-checking (it's not part of the workflow), but TypeScript needs it. A harness that skips type-checking will pass JavaScript's tests but fail TypeScript's. So always check: does the borrowed harness assume something the target language does differently?
+    </div>
+
+    <p>
+      Both strategies work, but with tradeoffs. Universal harnesses cost you some performance. Borrowed harnesses need to match the language. The best approach depends on your language complexity: simple languages? The universal harness works fine. Complex languages? Budget time for evolution.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= GUIDANCE ================= -->
+  <section id="guidance">
+    <h2><span class="kicker">Takeaways</span>What this means for you</h2>
+    <p>
+      Here's the basic recipe: <em>each programming language has its own conventions and pitfalls; your model already handles some of them, but not all; evolution fills the gaps.</em> Based on this, here's what to do in different situations:
+    </p>
+
+    <table class="guide">
+      <thead>
+        <tr><th>Your situation</th><th>What to do</th><th>Why it works</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Starting with a language you haven't seen before</td>
+          <td>Borrow a harness from another language, or use the universal template</td>
+          <td>The core ideas transfer well across languages (18 out of 20 pairs showed positive transfer)</td>
+        </tr>
+        <tr>
+          <td>Working with a simple language (Go, JavaScript)</td>
+          <td>The universal harness works fine—no need to customize</td>
+          <td>These languages don't need language-specific tricks; the gains come from good discipline alone</td>
+        </tr>
+        <tr>
+          <td>Working with a complex language (Java, C++, TypeScript)</td>
+          <td>You'll need to run evolution on your target language</td>
+          <td>About a third of the improvement comes from language-specific knowledge that doesn't transfer</td>
+        </tr>
+        <tr>
+          <td>Deciding if harness tuning is worth the effort</td>
+          <td>Check what mistakes your model makes most often</td>
+          <td>If your model already avoids the common pitfalls, there's nothing left for the harness to fix</td>
+        </tr>
+        <tr>
+          <td>Adding a check your language doesn't do automatically</td>
+          <td>Write it into the harness explicitly</td>
+          <td>Example: TypeScript needs explicit type-checking because running tests doesn't check types</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= LIMITATIONS ================= -->
+  <section id="limitations">
+    <h2><span class="kicker">Honest accounting</span>Limitations</h2>
+    <p>
+      <strong>Scope:</strong> We only test on single-goal code repair tasks from Multi-SWE-Bench—fix one bug per instance, verify it once. We don't test multi-goal scenarios, very long task sequences, or how harnesses adapt over time. How we measure a “recoverable defect” also depends on the evaluation rules: for instance, editing test files is fatal here because the grader checks against a hidden gold test, but that's protocol-specific. Still, evaluating all harnesses under the same rules gives reliable comparisons for this setting.
+    </p>
+    <p>
+      <strong>Methodology:</strong> We don't compare against other harness-optimization methods—each would need its own evolution budget across the full 24-cell grid. We also evaluate the system as a whole, not each component individually. Our data per language is modest (20 instances for training, 50 for testing), and evolution runs just once, so our findings describe <em>patterns</em> (which boundaries matter, where trade-offs occur) rather than individual numbers. Whether these insights hold for longer, more complex tasks is an open question.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= OUTLOOK ================= -->
+  <section id="outlook">
+    <h2><span class="kicker">Outlook</span>What we think this changes</h2>
+    <p class="lead">
+      The contribution here is not a number. It is that "the harness got better" stops being a black box and becomes a quantity with parts you can name, measure, and budget for.
+    </p>
+    <p>
+      Before this study, a reported harness gain was compatible with several very different stories — the loop learned real engineering knowledge, or it papered over a model's bad habits, or it quietly memorized the benchmark. Those stories are indistinguishable from an aggregate score, and they imply opposite things about whether the artifact is worth keeping. Holding one recipe fixed across a grid forces them apart. What comes out is that the gain is largely <em>compensation</em>: the loop installs disciplines the model was already capable of following but didn't, and the disciplines a task demands are set by the ecosystem it lives in. That is a mundane-sounding answer, and we think its mundanity is the point — it means the artifact is inspectable, its failures are predictable from properties you can measure beforehand, and its value doesn't rest on the loop having discovered anything the model couldn't already express.
+    </p>
+    <p>
+      The most useful consequence is a negative one. If harness gain is compensation for measurable defects, then <strong>the defect profile tells you in advance whether to bother</strong> — and sometimes the answer is no. Python and GPT-5-mini both came back flat, from opposite axes, for the same reason: there was nothing left to install. In a field where the default assumption is that more scaffolding helps, having a cheap leading indicator for "this one won't" is worth more than another point of pass@1. It also reframes what a strong model is. GPT-5-mini is not the most capable of the three by solve rate, yet it is the least improvable by this loop — capability and behavioral discipline are separate axes, and only one of them is what harness engineering buys.
+    </p>
+    <p>
+      The other consequence is that reuse becomes a budgeting decision rather than a guess. The gain splits into a portable disciplinary core and an ecosystem-bound remainder, and — this is the part we did not expect to hold — the split measures the same on both sides of the wall: a fifth to two-fifths of the text a harness writes is ecosystem-specific, and on ecosystem-heavy targets roughly that same fraction of the gain survives neither transfer nor distillation. When a textual property and a held-out solve rate agree on a number, the decomposition is probably real rather than an artifact of how we tagged things. This decomposition also yields an immediately usable decision rule. A base policy's defect profile is measurable before any evolution is run, and it tells you where harness engineering will pay: C++ rollouts fail to compile 70% of the time, Go's under 10%, and Python's covered defect rate is 5.6% — which is why Python gains nothing under any of the three models. Once a cell is worth evolving, generic targets can be bootstrapped from a distilled, language-agnostic memory file that already matches native evolution (Go 1.08, JS 1.13), while ecosystem-heavy targets recover only half to two-thirds of the gain (TypeScript 0.48, C++ 0.65), making native re-evolution necessary. Neither set of numbers is a headroom estimate — our detectors cover only part of the recoverable space — but both are cheap to obtain and together tell you where to invest: bootstrap from whatever harness you have, avoid specialization where the ecosystem is generic, and pay for native evolution where it isn't.
+    </p>
+    <p>
+      Where this points next is at targets whose conventions appear in no public corpus: internal monorepos, embedded toolchains, domain-specific stacks. Public language ecosystems are the favorable case for reuse — best documented, most standardized, most heavily represented in pretraining — and even there the ecosystem margin is 20–40% of what the loop writes. The mechanism behind the JS→TS wall says why that should get worse rather than better: a discipline has to be named explicitly in the harness exactly when it is not a free consequence of the ecosystem's own execution chain, and private stacks are made of conventions that no execution chain enforces. The argument for evolving rather than hand-writing a rules file is not that the margin is large but that nobody knows where it sits; a defect profile is measured, and a hand-written scaffold hard-codes one guess. What makes this practical is the input: twenty resolved-issue instances with their test patches — recoverable from CI history — rather than a labeled dataset.
+    </p>
+    <p>
+      A second direction is that a harness which reliably produces verifier-passing trajectories precisely where a policy is weak is a data generator aimed by a diagnosis: typed routing selects which behavior to sample for, rather than filtering completed rollouts by outcome. The compensation account then makes the resulting claim differential and checkable. If training on that data internalizes the discipline, the portable component should be the part that disappears — the retention ρ of the stripped universal harness should fall sharply on a retrained policy, while the ecosystem margin, which encodes build commands and layout conventions that drift with the repository, should not move. A uniform shrink, or none at all, would be the informative outcome: the first would say the two components were never functionally distinct, and the second, once a failure to internalize is ruled out, that we have mislabeled what the loop installs.
+    </p>
+    <p>
+      What we'd most like readers to take from the grid is a methodological habit rather than any single result: when a self-improving system reports that it improved, ask what the artifact says, and vary something that should change the answer. The instrumentation that makes an edit attributable after the fact cost us more design effort than the search loop itself, and it is the only reason any of the four findings can be stated at all.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= BIBTEX ================= -->
+  <section id="bibtex">
+    <h2><span class="kicker">Citation</span>BibTeX</h2>
+    <p class="sans" style="font-size:15px;color:var(--ink-faint)">If you find this work useful, please cite:</p>
+<pre class="bibtex">@misc{yang2026recipeharnessesselfevolutionencodes,
+      title={One Recipe, Many Harnesses: What Self-Evolution Encodes Across Languages and Models}, 
+      author={Siqi Yang and Qianlan Yang and Yu-Xiong Wang and Saurabh Pujar and Martin Hirzel},
+      year={2026},
+      eprint={2608.10178},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE},
+      url={https://arxiv.org/abs/2608.10178}, 
+}</pre>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <p>© 2026 · Website for <em>&ldquo;What Does a Self-Evolved Harness Encode?&rdquo;</em><br>
+  Page template is free to reuse with attribution.</p>
+</footer>
+
+</body>
+</html>
