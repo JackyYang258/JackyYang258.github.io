@@ -15,7 +15,7 @@ templating, no build step for the site itself.
 
 - `assets/` — images used by `lwail.html`
 - `website/static/images/` — images used by the harness paper page
-- `cv.tex` — LaTeX source for the CV; CI compiles it to `/assets/cv.pdf`
+- `cv.tex` — LaTeX source for the CV; CI compiles it to `/assets/siqi-yang-cv.pdf`
 - `_bibliography/papers.bib` — bibliography source of truth (not deployed; the
   publication list is written directly into `index.html`)
 - `.nojekyll` — tells GitHub Pages to serve the branch as-is
@@ -30,7 +30,7 @@ These directories are one-line redirect stubs that keep them working:
 |---|---|
 | `/projects/triage/` | `/website/index.html` |
 | `/projects/lwail/` | `/lwail.html` |
-| `/cv/` | `/assets/cv.pdf` |
+| `/cv/` | `/assets/siqi-yang-cv.pdf` |
 | `/publications/`, `/projects/` | `/#publications` |
 | `/teaching/` | `/#honors` |
 | `/news/`, `/repositories/` | `/` |

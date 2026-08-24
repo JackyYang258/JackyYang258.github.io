@@ -42,11 +42,11 @@ jobs:
             --exclude .gitignore \
             --exclude .gitattributes \
             --exclude 'cv.*'
-          # Publish the CV under assets/ -- a root-level cv.pdf collides with
-          # the /cv/ redirect directory and GitHub Pages 404s it.
+          # Published under assets/ with a descriptive filename (it is also
+          # what the browser saves it as).
           if [ -f cv.pdf ]; then
-            cp cv.pdf dist/assets/cv.pdf
-            echo "CV PDF included at /assets/cv.pdf"
+            cp cv.pdf dist/assets/siqi-yang-cv.pdf
+            echo "CV PDF included at /assets/siqi-yang-cv.pdf"
           else
             echo "::warning::cv.pdf was not built; site deploys without it"
           fi
