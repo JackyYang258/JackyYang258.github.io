@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latent Wasserstein Adversarial Imitation Learning</title>
+<meta name="description" content="State-only imitation learning that computes the Wasserstein distance in a dynamics-aware latent space, reaching expert performance from a single expert trajectory. ICLR 2026.">
+<meta property="og:title" content="Latent Wasserstein Adversarial Imitation Learning">
+<meta property="og:description" content="State-only imitation learning that computes the Wasserstein distance in a dynamics-aware latent space, reaching expert performance from a single expert trajectory. ICLR 2026.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jackyyang258.github.io/lwail.html">
+<meta property="og:image" content="https://jackyyang258.github.io/assets/lwail_performance.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Latent Wasserstein Adversarial Imitation Learning">
+<meta name="twitter:description" content="State-only imitation learning via Wasserstein distance in a dynamics-aware latent space. ICLR 2026.">
+<meta name="twitter:image" content="https://jackyyang258.github.io/assets/lwail_performance.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%233577bd'/%3E%3Ctext x='50' y='72' font-size='62' font-family='Georgia,serif' font-weight='bold' fill='white' text-anchor='middle'%3EL%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+  :root {
+    --accent: #3577bd;
+    --accent-dark: #275d96;
+    --ink: #1c2733;
+    --ink-soft: #46586b;
+    --ink-faint: #7b8a99;
+    --paper: #ffffff;
+    --paper-warm: #f6f8fa;
+    --rule: #e3e9ef;
+    --highlight: #fff7e6;
+    --max-width: 860px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.65;
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+  }
+  .sans { font-family: 'Inter', -apple-system, sans-serif; }
+  code, pre { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  /* ---------- Backlink ---------- */
+  .backlink {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    padding: 16px 24px 0;
+    max-width: 1020px; margin: 0 auto;
+  }
+  .backlink a { color: var(--ink-faint); text-decoration: none; }
+  .backlink a:hover { color: var(--accent-dark); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: 40px 24px 40px;
+    text-align: center;
+    background:
+      radial-gradient(1000px 400px at 50% -120px, #e8f0f9 0%, rgba(232,240,249,0) 70%),
+      var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-inner { max-width: 940px; margin: 0 auto; }
+  .venue-tag {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    background: #e8f0f9;
+    border: 1px solid #cddff0;
+    padding: 5px 14px; border-radius: 999px;
+    margin-bottom: 22px;
+  }
+  h1.title {
+    font-size: clamp(28px, 4.2vw, 40px);
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 0 0 18px;
+  }
+  .authors { font-size: 18px; margin: 0 0 6px; }
+  .authors a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
+  .authors a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .authors sup { color: var(--accent-dark); font-size: 12px; }
+  .affils { font-family: 'Inter', sans-serif; font-size: 14.5px; color: var(--ink-faint); margin: 0 0 30px; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 8px; }
+  .btn {
+    font-family: 'Inter', sans-serif;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 600;
+    color: #fff; background: var(--ink);
+    padding: 10px 20px; border-radius: 999px;
+    text-decoration: none;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* ---------- Layout ---------- */
+  .wrap { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+  section { padding: 34px 0 6px; }
+  h2 {
+    font-size: 27px; line-height: 1.25; font-weight: 700;
+    margin: 34px 0 14px;
+    scroll-margin-top: 24px;
+    text-align: center;
+  }
+  p { margin: 0 0 18px; }
+  a { color: var(--accent-dark); }
+  strong { font-weight: 700; }
+
+  /* ---------- Pull quote ---------- */
+  .pull-quote {
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 20px 26px;
+    margin: 30px 0;
+    font-size: 18px;
+    font-style: italic;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  /* ---------- Details/abstract ---------- */
+  details.abstract {
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 18px 0 26px;
+  }
+  details.abstract summary {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 14.5px; cursor: pointer;
+    color: var(--accent-dark);
+  }
+  details.abstract p { margin-top: 12px; margin-bottom: 0; }
+
+  /* ---------- Figures ---------- */
+  figure { margin: 28px 0 30px; text-align: center; }
+  figure img {
+    max-width: 100%; height: auto;
+    border: 1px solid var(--rule); border-radius: 10px;
+    background: #fff; padding: 10px;
+  }
+  figcaption {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; line-height: 1.55;
+    color: var(--ink-faint);
+    margin-top: 10px; padding: 0 6px;
+    text-align: left;
+  }
+
+  .fig-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; }
+  .fig-row > div { flex: 1 1 260px; }
+
+  /* ---------- Method box ---------- */
+  .method-box {
+    background: var(--paper-warm);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    margin: 1rem 0 1.4rem 0;
+    overflow-x: auto;
+  }
+
+  /* ---------- BibTeX ---------- */
+  pre.bibtex {
+    background: #0f1720; color: #dce6f0;
+    border-radius: 10px;
+    padding: 20px 22px;
+    font-size: 13.5px; line-height: 1.6;
+    overflow-x: auto;
+    margin: 20px 0 40px;
+  }
+
+  hr.sep { border: none; border-top: 1px solid var(--rule); margin: 44px 0 8px; }
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 40px; padding: 30px 24px 44px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; color: var(--ink-faint);
+    text-align: center;
+  }
+  footer a { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="backlink"><a href="index.html">&#8592; Siqi Yang</a> &nbsp;&middot;&nbsp; <a href="index.html#publications">All publications</a></div>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="venue-tag">ICLR 2026</div>
+    <h1 class="title">Latent Wasserstein Adversarial Imitation Learning</h1>
+    <p class="authors">
+      <a href="index.html">Siqi&nbsp;Yang</a><sup>1</sup> &nbsp;&middot;&nbsp;
+      <a href="https://kaiyan289.github.io" target="_blank" rel="noopener">Kai&nbsp;Yan</a><sup>1</sup> &nbsp;&middot;&nbsp;
+      <a href="https://alexander-schwing.de" target="_blank" rel="noopener">Alexander&nbsp;G.&nbsp;Schwing</a><sup>1</sup> &nbsp;&middot;&nbsp;
+      <a href="https://yxw.web.illinois.edu" target="_blank" rel="noopener">Yu&#8209;Xiong&nbsp;Wang</a><sup>1</sup>
+    </p>
+    <p class="affils"><sup>1</sup>University of Illinois Urbana&#8209;Champaign (UIUC)</p>
+    <div class="btn-row sans">
+      <a class="btn" href="https://arxiv.org/abs/2603.05440" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v2H6v12h5v2H4V4zm9 0h7v16h-7v-2h5V6h-5V4z"/></svg>
+        arXiv
+      </a>
+      <a class="btn" href="https://github.com/JackyYang258/LWAIL" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.7 5.6.7 11.9c0 5 3.2 9.3 7.7 10.8.6.1.8-.2.8-.5v-2c-3.1.7-3.8-1.3-3.8-1.3-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 1.7 2.6 1.2 3.3.9.1-.7.4-1.2.7-1.5-2.5-.3-5.2-1.3-5.2-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3 0 0 1-.3 3.1 1.2a10.7 10.7 0 0 1 5.7 0C16.9 5 17.9 5.3 17.9 5.3c.6 1.6.2 2.8.1 3 .7.9 1.2 1.9 1.2 3.2 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.5a11.3 11.3 0 0 0 7.6-10.7C23.3 5.6 18.3.5 12 .5z"/></svg>
+        Code
+      </a>
+      <a class="btn" href="#bibtex">
+        <svg viewBox="0 0 24 24"><path d="M9.6 4l-5 16h2.2l1.2-4h5l1.2 4h2.2l-5-16H9.6zm-1 10l1.9-6.3L12.4 14H8.6zM19 8h2v12h-2V8z"/></svg>
+        BibTeX
+      </a>
+    </div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="pull-quote">
+    Traditional distance metrics fail to capture environment dynamics in Wasserstein AIL &mdash; we solve this by computing the Wasserstein distance in a dynamics-aware latent space.
+  </div>
+
+  <figure>
+    <img src="assets/lwail_teaser.png" alt="Illustration of why Euclidean distance is a poor metric between states" style="max-width: min(100%, 320px);">
+    <figcaption style="text-align:center;"><b>Why Euclidean distance falls short.</b> State B is closer to Expert State C in Euclidean distance, but State A is actually closer to Expert State C in the real dynamics of the world &mdash; a plain distance metric cannot see this.</figcaption>
+  </figure>
+
+  <!-- ================= ABSTRACT ================= -->
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <p>
+      Imitation Learning (IL) enables agents to mimic expert behavior by learning from demonstrations. However, traditional IL methods require large amounts of medium-to-high-quality demonstrations as well as actions of expert demonstrations, both of which are often unavailable. To reduce this need, we propose <strong>Latent Wasserstein Adversarial Imitation Learning (LWAIL)</strong>, a novel adversarial imitation learning framework that focuses on state-only distribution matching.
+    </p>
+    <p>
+      It benefits from the Wasserstein distance computed in a dynamics-aware latent space. This latent space is obtained via a pre-training stage, where we train an Intention-Conditioned Value Function (ICVF) to capture a dynamics-aware structure of the state space using a small set of randomly generated state-only data. This enhances the policy's understanding of state transitions, enabling the learning process to use only one or a few state-only expert episodes to achieve expert-level performance. Through experiments on multiple MuJoCo environments, we demonstrate that our method outperforms prior Wasserstein-based IL methods and prior adversarial IL methods across various tasks.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= WHY ================= -->
+  <section id="why">
+    <h2>Why the Distance Metric Fails</h2>
+    <p>
+      Many prior Wasserstein IL works that employ the Kantorovich&ndash;Rubinstein (KR) dual overlook an important issue: the distance metric between individual states is rather simplistic. The Euclidean distance is common, but it fails to capture the environment's dynamics. For example, a state might be physically close to an expert state in Euclidean space, but unreachable due to an obstacle &mdash; making it a poor metric for the learning process.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= METHOD ================= -->
+  <section id="method">
+    <h2>Our Approach</h2>
+    <p>We propose a two-stage process:</p>
+    <p>
+      <strong>Pre-training stage.</strong> We leverage a small amount (1% of online rollouts) of unstructured, low-quality (e.g., random) state-only data to train an Intention-Conditioned Value Function. The resulting embedding captures a rich, dynamics-aware notion of reachability between states.
+    </p>
+    <p>
+      <strong>Imitation stage.</strong> We freeze this ICVF embedding and use the Euclidean distance in this new latent space as the cost function within a standard Wasserstein AIL framework.
+    </p>
+    <p>In the adversarial imitation learning stage, we optimize the following objective:</p>
+    <div class="method-box">
+      $$
+      \min_\pi\max_{\|f\|_L\leq 1}
+      \left(
+      \mathbb{E}_{(s, s')\sim d^\pi_{ss}}[f(\phi(s),\phi(s'))]
+      - \mathbb{E}_{(s,s')\sim d^E_{ss}}[f(\phi(s),\phi(s'))]
+      \right).
+      $$
+    </div>
+    <p>
+      Here $\pi$ is the policy to be learned, $f$ is the critic constrained to be 1-Lipschitz, $d^\pi_{ss}$ is the state-transition pair distribution induced by policy $\pi$, $d^E_{ss}$ is the expert state-transition pair distribution, and $\phi(\cdot)$ is the frozen ICVF embedding mapping raw states to the dynamics-aware latent space. The critic maximizes the Wasserstein discrepancy between policy and expert transition-pair distributions in latent space, while the policy minimizes it.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= PERFORMANCE ================= -->
+  <section id="performance">
+    <h2>Performance</h2>
+    <p>
+      We validate our approach on pointmaze, antmaze, and challenging locomotion tasks in the MuJoCo environment from the D4RL benchmark, achieving strong results using only a single trajectory of state-based expert data. Our results show that the latent space captures transition dynamics far better than the vanilla Euclidean distance.
+    </p>
+
+    <figure>
+      <div class="fig-row">
+        <div><img src="assets/lwail_tsne_halfcheetah.png" alt="t-SNE comparison of state space versus latent space on HalfCheetah" style="width:100%;"></div>
+        <div><img src="assets/lwail_tsne_walker.png" alt="t-SNE comparison of state space versus latent space on Walker2d" style="width:100%;"></div>
+      </div>
+      <figcaption><b>t-SNE visualizations on HalfCheetah (left) and Walker2d (right).</b> Points are colored by ground-truth reward (greener is higher); lines connect states adjacent in the trajectory. The raw state space (left of each pair) tangles high- and low-reward states together, while the ICVF-trained latent space (right of each pair) separates them into clean, reward-ordered clusters &mdash; a directly visible sign that the embedding is dynamics-aware.</figcaption>
+    </figure>
+
+    <p>
+      Normalized rewards on Hopper, HalfCheetah, Walker2d, and Ant &mdash; each learned from a single expert trajectory &mdash; consistently favor LWAIL over prior Wasserstein-based (PWIL, WDAIL) and f-divergence-based (GAIfO, IQlearn, OPOLO) imitation learning baselines, as well as behavioral cloning (BC).
+    </p>
+    <figure>
+      <img src="assets/lwail_performance.png" alt="Normalized reward comparison across Hopper, HalfCheetah, Walker2d, and Ant" style="width:100%;">
+      <figcaption><b>Normalized rewards from a single expert trajectory.</b> LWAIL (red) matches or leads every baseline across all four MuJoCo locomotion tasks, with the largest margins on HalfCheetah and Walker2d.</figcaption>
+    </figure>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= REFERENCES ================= -->
+  <section id="references">
+    <h2>References</h2>
+    <p style="font-size: 16px;">
+      [1] Martin Arjovsky, Soumith Chintala, and L&eacute;on Bottou. Wasserstein generative adversarial networks. In <em>ICML</em>, 2017.
+    </p>
+    <p style="font-size: 16px;">
+      [2] Dibya Ghosh, Chethan Anand Bhateja, and Sergey Levine. Reinforcement learning from passive data via latent intentions. In <em>ICML</em>, 2023.
+    </p>
+  </section>
+
+  <hr class="sep">
+
+  <!-- ================= BIBTEX ================= -->
+  <section id="bibtex">
+    <h2>BibTeX</h2>
+    <p class="sans" style="font-size:15px;color:var(--ink-faint); text-align:center;">If you find this work useful, please cite:</p>
+<pre class="bibtex">@article{yang2026latentwassersteinadversarialimitation,
+  title   = {Latent Wasserstein Adversarial Imitation Learning},
+  author  = {Yang, Siqi and Yan, Kai and Schwing, Alexander G. and Wang, Yu-Xiong},
+  journal = {International Conference on Learning Representations (ICLR)},
+  year    = {2026},
+  eprint  = {2603.05440},
+  archivePrefix = {arXiv},
+  url     = {https://arxiv.org/abs/2603.05440}
+}</pre>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <p>&copy; 2026 &middot; Website for the ICLR 2026 paper <em>&ldquo;Latent Wasserstein Adversarial Imitation Learning&rdquo;</em><br>
+  <a href="index.html">Siqi Yang</a> &nbsp;&middot;&nbsp; <a href="index.html#publications">All publications</a></p>
+</footer>
+
+</body>
+</html>
