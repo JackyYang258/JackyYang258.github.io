@@ -9,6 +9,11 @@ on:
 permissions:
   contents: write
 
+# Never let two deploys race for the gh-pages branch.
+concurrency:
+  group: deploy-pages
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -26,8 +31,17 @@ jobs:
       - name: Stage static site
         run: |
           mkdir -p dist
-          cp index.html lwail.html robots.txt sitemap.xml dist/
-          cp -r assets website projects dist/
+          rsync -a ./ dist/ \
+            --exclude dist \
+            --exclude .git \
+            --exclude .github \
+            --exclude _bibliography \
+            --exclude cv.tex \
+            --exclude README.md \
+            --exclude LICENSE \
+            --exclude .gitignore \
+            --exclude .gitattributes \
+            --exclude '*.aux' --exclude '*.log' --exclude '*.out'
           if [ -f cv.pdf ]; then
             cp cv.pdf dist/cv.pdf
             echo "CV PDF included"
