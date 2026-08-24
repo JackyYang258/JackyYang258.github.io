@@ -13,3 +13,8 @@ _scripts/*
 _data/citations.yml
 # Ignore website directory (paper HTML page)
 website/
+# Ignore Jekyll project files with existing formatting
+_config.yml
+_layouts/
+_pages/
+_projects/
