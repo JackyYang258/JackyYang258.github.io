@@ -15,6 +15,6 @@ _data/citations.yml
 website/
 # Ignore Jekyll project files with existing formatting
 _config.yml
-_layouts/
-_pages/
-_projects/
+_layouts/**
+_pages/**
+_projects/**
