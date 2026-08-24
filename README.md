@@ -9,7 +9,7 @@ templating, no build step for the site itself.
 |---|---|---|
 | `index.html` | `/` | Homepage: about, publications, experience, education, honors & service, skills, contact |
 | `lwail.html` | `/lwail.html` | Paper microsite — *Latent Wasserstein Adversarial Imitation Learning* (ICLR 2026) |
-| `website/index.html` | `/website/` | Paper microsite — *What Does a Self-Evolved Harness Encode?* (submitted to AAAI 2027) |
+| `website/index.html` | `/website/` | Paper microsite — *What Does a Self-Evolved Harness Encode?* |
 
 ## Supporting files
 
