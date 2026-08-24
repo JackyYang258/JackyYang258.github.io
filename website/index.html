@@ -312,7 +312,7 @@
   </div>
 
   <figure class="wide">
-    <img src="static/images/paper_main_3way.png" alt="Main results: held-out solve rates of minimal seed, mini-SWE-agent, and TRIAGE across 8 languages and 3 models" />
+    <img src="static/images/paper_main_3way.png" alt="Main results: held-out solve rates of minimal seed, mini-SWE-agent, and TRIAGE across 8 languages and 3 models">
     <figcaption><b>Held-out results across the full 8×3 grid.</b> The evolved harness (blue) improves over the minimal seed in most cells and matches or exceeds the manually designed mini-SWE-agent. <strong>Two null regions</strong> fall exactly along the grid's two axes — Python under every model, and GPT-5-mini in every language — and the paper's mechanism accounts for both.</figcaption>
   </figure>
 
@@ -391,7 +391,7 @@
     </p>
 
     <figure>
-      <img src="static/images/overview.png" alt="Overview of the TRIAGE harness self-evolution loop" />
+      <img src="static/images/overview.png" alt="Overview of the TRIAGE harness self-evolution loop">
       <figcaption><b>The TRIAGE loop.</b> The AI agent runs inside an evolving harness (prompt, tools, and saved lessons). When it fails, we analyze the failure and propose a fix. Each fix is tested to make sure it actually helps before being kept.</figcaption>
     </figure>
 
@@ -439,7 +439,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/selfsab_composition.png” alt=”Composition of automatically detected execution defects by language” />
+      <img src=”static/images/selfsab_composition.png” alt=”Composition of automatically detected execution defects by language”>
       <figcaption><b>Different languages need different fixes.</b> Compiled languages like C++ break when code doesn't compile (70% of failures). Interpreted languages like JavaScript more often have the test-file problem. So each language's harness learns different priorities.</figcaption>
     </figure>
 
@@ -466,7 +466,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/c2_jaccard_haiku.png” alt=”Cross-language harness overlap at the concept level versus the ecosystem-marker level (Claude Haiku 4.5)” />
+      <img src=”static/images/c2_jaccard_haiku.png” alt=”Cross-language harness overlap at the concept level versus the ecosystem-marker level (Claude Haiku 4.5)”>
       <figcaption><b>Same idea, different details.</b> Different languages' harnesses agree on the same core principles, but use different tools and commands to implement them.</figcaption>
     </figure>
 
@@ -475,7 +475,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/c2_ecofrac.png” alt=”Ecosystem-specific fraction of each evolved harness per language, for Haiku and DeepSeek” />
+      <img src=”static/images/c2_ecofrac.png” alt=”Ecosystem-specific fraction of each evolved harness per language, for Haiku and DeepSeek”>
       <figcaption><b>How much is language-specific?</b> About a quarter to a third of each evolved harness is language-specific gear that won't work elsewhere.</figcaption>
     </figure>
   </section>
@@ -495,7 +495,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/e7_universal_retention.png” alt=”Retention of native gain by a single language-agnostic universal harness across seven languages” />
+      <img src=”static/images/e7_universal_retention.png” alt=”Retention of native gain by a single language-agnostic universal harness across seven languages”>
       <figcaption><b>It depends on the language.</b> Simple languages (Go, JavaScript) don't need language-specific tricks—the universal harness works just as well. Complex languages (Java, C++, TypeScript) need customization to get the full benefit.</figcaption>
     </figure>
 
@@ -505,7 +505,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/xfer_5x5.png” alt=”Cross-language transfer retention matrix over five languages” />
+      <img src=”static/images/xfer_5x5.png” alt=”Cross-language transfer retention matrix over five languages”>
       <figcaption><b>It works surprisingly well.</b> Harnesses mostly transfer positively between languages, giving you a head start. But you won't get the full performance without some customization.</figcaption>
     </figure>
 
