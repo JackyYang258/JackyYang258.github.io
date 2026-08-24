@@ -428,7 +428,7 @@
   <!-- ================= FINDING 2 ================= -->
   <section id="finding2">
     <h2><span class="kicker">Finding 2</span>Gains are compensation for recoverable execution defects</h2>
-    <p class=”lead”>
+    <p class="lead">
       The harness doesn't teach the model better reasoning—it teaches better <em>process</em>. The AI knows how to fix bugs, but forgets to follow the steps.
     </p>
     <p>
@@ -439,7 +439,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/selfsab_composition.png” alt=”Composition of automatically detected execution defects by language”>
+      <img src="static/images/selfsab_composition.png" alt="Composition of automatically detected execution defects by language">
       <figcaption><b>Different languages need different fixes.</b> Compiled languages like C++ break when code doesn't compile (70% of failures). Interpreted languages like JavaScript more often have the test-file problem. So each language's harness learns different priorities.</figcaption>
     </figure>
 
@@ -450,8 +450,8 @@
       One weak AI model couldn't improve no matter the language—it's not that it needs a better harness, it just can't do the task well enough. This matches our theory: the harness only helps when the model <em>can</em> do better but doesn't automatically.
     </p>
 
-    <div class=”callout”>
-      <span class=”label”>Key point</span>
+    <div class="callout">
+      <span class="label">Key point</span>
       The harness fixes bad habits, not bad understanding. The AI knows what good code looks like; it just needs to be reminded to follow the steps.
     </div>
   </section>
@@ -462,11 +462,11 @@
   <section id="finding3">
     <h2><span class="kicker">Finding 3</span>A shared playbook, almost disjoint instantiations</h2>
     <p>
-      Each language gets its own harness. But are they completely different, or do they follow the same playbook with different details? We looked at what each harness actually says and found they share the same <em>ideas</em> (like “check tests before submitting”) but use completely different <em>concrete steps</em> (Java's test runner works nothing like JavaScript's).
+      Each language gets its own harness. But are they completely different, or do they follow the same playbook with different details? We looked at what each harness actually says and found they share the same <em>ideas</em> (like "check tests before submitting") but use completely different <em>concrete steps</em> (Java's test runner works nothing like JavaScript's).
     </p>
 
     <figure>
-      <img src=”static/images/c2_jaccard_haiku.png” alt=”Cross-language harness overlap at the concept level versus the ecosystem-marker level (Claude Haiku 4.5)”>
+      <img src="static/images/c2_jaccard_haiku.png" alt="Cross-language harness overlap at the concept level versus the ecosystem-marker level (Claude Haiku 4.5)">
       <figcaption><b>Same idea, different details.</b> Different languages' harnesses agree on the same core principles, but use different tools and commands to implement them.</figcaption>
     </figure>
 
@@ -475,7 +475,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/c2_ecofrac.png” alt=”Ecosystem-specific fraction of each evolved harness per language, for Haiku and DeepSeek”>
+      <img src="static/images/c2_ecofrac.png" alt="Ecosystem-specific fraction of each evolved harness per language, for Haiku and DeepSeek">
       <figcaption><b>How much is language-specific?</b> About a quarter to a third of each evolved harness is language-specific gear that won't work elsewhere.</figcaption>
     </figure>
   </section>
@@ -485,7 +485,7 @@
   <!-- ================= FINDING 4 ================= -->
   <section id="finding4">
     <h2><span class="kicker">Finding 4</span>Reuse is real — and bounded by the ecosystem margin</h2>
-    <p class=”lead”>
+    <p class="lead">
       Can you reuse a harness from one language in another? Let's test two ideas: (1) strip out the language-specific parts and keep only the core ideas, (2) just copy a complete harness as-is. Both work to some degree, but have limits.
     </p>
 
@@ -495,7 +495,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/e7_universal_retention.png” alt=”Retention of native gain by a single language-agnostic universal harness across seven languages”>
+      <img src="static/images/e7_universal_retention.png" alt="Retention of native gain by a single language-agnostic universal harness across seven languages">
       <figcaption><b>It depends on the language.</b> Simple languages (Go, JavaScript) don't need language-specific tricks—the universal harness works just as well. Complex languages (Java, C++, TypeScript) need customization to get the full benefit.</figcaption>
     </figure>
 
@@ -505,7 +505,7 @@
     </p>
 
     <figure>
-      <img src=”static/images/xfer_5x5.png” alt=”Cross-language transfer retention matrix over five languages”>
+      <img src="static/images/xfer_5x5.png" alt="Cross-language transfer retention matrix over five languages">
       <figcaption><b>It works surprisingly well.</b> Harnesses mostly transfer positively between languages, giving you a head start. But you won't get the full performance without some customization.</figcaption>
     </figure>
 
@@ -513,11 +513,11 @@
       <strong>The core travel; the details don't.</strong> When you borrow a harness from another language, you get the good ideas but miss out on language-specific optimizations. That's often good enough to bootstrap a new language, but you'll need evolution to get the best results.
     </p>
     <p>
-      <strong>Some harnesses export better than others.</strong> A harness built for one language's problems doesn't always help another. JavaScript teaches “run tests first,” which helps typed languages (because building is part of running tests). But JavaScript itself doesn't benefit from C++'s “check types” rule because JavaScript doesn't have a separate type-checking step.
+      <strong>Some harnesses export better than others.</strong> A harness built for one language's problems doesn't always help another. JavaScript teaches "run tests first," which helps typed languages (because building is part of running tests). But JavaScript itself doesn't benefit from C++'s "check types" rule because JavaScript doesn't have a separate type-checking step.
     </p>
 
-    <div class=”callout”>
-      <span class=”label”>The catch</span>
+    <div class="callout">
+      <span class="label">The catch</span>
       Borrowing a harness from JavaScript for TypeScript actually backfires. JavaScript doesn't enforce type-checking (it's not part of the workflow), but TypeScript needs it. A harness that skips type-checking will pass JavaScript's tests but fail TypeScript's. So always check: does the borrowed harness assume something the target language does differently?
     </div>
 
@@ -575,7 +575,7 @@
   <section id="limitations">
     <h2><span class="kicker">Honest accounting</span>Limitations</h2>
     <p>
-      <strong>Scope:</strong> We only test on single-goal code repair tasks from Multi-SWE-Bench—fix one bug per instance, verify it once. We don't test multi-goal scenarios, very long task sequences, or how harnesses adapt over time. How we measure a “recoverable defect” also depends on the evaluation rules: for instance, editing test files is fatal here because the grader checks against a hidden gold test, but that's protocol-specific. Still, evaluating all harnesses under the same rules gives reliable comparisons for this setting.
+      <strong>Scope:</strong> We only test on single-goal code repair tasks from Multi-SWE-Bench—fix one bug per instance, verify it once. We don't test multi-goal scenarios, very long task sequences, or how harnesses adapt over time. How we measure a "recoverable defect" also depends on the evaluation rules: for instance, editing test files is fatal here because the grader checks against a hidden gold test, but that's protocol-specific. Still, evaluating all harnesses under the same rules gives reliable comparisons for this setting.
     </p>
     <p>
       <strong>Methodology:</strong> We don't compare against other harness-optimization methods—each would need its own evolution budget across the full 24-cell grid. We also evaluate the system as a whole, not each component individually. Our data per language is modest (20 instances for training, 50 for testing), and evolution runs just once, so our findings describe <em>patterns</em> (which boundaries matter, where trade-offs occur) rather than individual numbers. Whether these insights hold for longer, more complex tasks is an open question.
