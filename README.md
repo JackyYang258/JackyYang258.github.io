@@ -15,7 +15,7 @@ templating, no build step for the site itself.
 
 - `assets/` — images used by `lwail.html`
 - `website/static/images/` — images used by the harness paper page
-- `cv.tex` — LaTeX source for the CV; CI compiles it to `/assets/siqi-yang-cv.pdf`
+- `cv.tex` — LaTeX source for the CV; CI compiles it to `assets/siqi-yang-cv.pdf`
 - `_bibliography/papers.bib` — bibliography source of truth (not deployed; the
   publication list is written directly into `index.html`)
 - `.nojekyll` — tells GitHub Pages to serve the branch as-is
@@ -37,14 +37,13 @@ These directories are one-line redirect stubs that keep them working:
 
 ## Deploy
 
-`.github/workflows/deploy.yml` runs on every push to `main`:
+GitHub Pages serves the `main` branch directly, so **there is no site build
+step** — pushing to `main` publishes. Everything in the repo is therefore
+web-reachable, including `README.md` and `cv.tex`.
 
-1. compiles `cv.tex` to `cv.pdf` (`continue-on-error` — a LaTeX failure can
-   never block the site going out)
-2. rsyncs the site into `dist/`, excluding sources and repo metadata
-3. pushes `dist/` to the `gh-pages` branch
-
-Adding a new page needs no workflow change — rsync picks it up automatically.
+The one workflow, `.github/workflows/build-cv.yml`, recompiles `cv.tex` into
+`assets/siqi-yang-cv.pdf` and commits it back. It runs only when `cv.tex`
+changes, because the LaTeX packages it needs are awkward to install locally.
 
 ## Local preview
 
@@ -58,5 +57,6 @@ also works; only the root-relative links in the redirect stubs need a server.
 ## History
 
 The site was previously built on the [al-folio](https://github.com/alshedivat/al-folio)
-Jekyll theme. That full state is archived on the branch
-`archive/jekyll-site-2026-08-24`.
+Jekyll theme, whose workflow built with Jekyll and pushed to a `gh-pages`
+branch. Pages actually serves `main`, so that branch is now unused and can be
+deleted. The full pre-rewrite state is archived on `archive/jekyll-site-2026-08-24`.
